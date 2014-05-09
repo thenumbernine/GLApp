@@ -1,0 +1,6 @@
+basis for OpenGL applications
+I'll bloat it up with needless stuff soon enough
+
+uses:
+- SDL for events and such
+
