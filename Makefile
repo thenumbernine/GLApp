@@ -1,13 +1,15 @@
-DISTDIR_BASE=dist
-DISTDIR_DEBUG=$(DISTDIR_BASE)/osx/debug
-DISTDIR_RELEASE=$(DISTDIR_BASE)/osx/release
-DIST=$(DISTDIR)/libGLApp.dylib
+# PLATFORM: osx
+# BUILD: debug, release
 
 OBJECTS=GLApp.o
 
+DISTDIR_BASE=dist
+DIST_FILENAME=libGLApp.dylib
+DISTDIR=$(DISTDIR_BASE)/$(PLATFORM)/$(BUILD)
+DIST=$(DISTDIR)/$(DIST_FILENAME)
+
 OBJDIR_BASE=obj
-OBJDIR_DEBUG=$(OBJDIR_BASE)/osx/debug
-OBJDIR_RELEASE=$(OBJDIR_BASE)/osx/release
+OBJDIR=$(OBJDIR_BASE)/$(PLATFORM)/$(BUILD)
 OBJPATHS=$(addprefix $(OBJDIR)/, $(OBJECTS))
 
 CC=clang++
@@ -20,42 +22,49 @@ LDFLAGS_BASE=-dynamiclib -undefined suppress -flat_namespace
 LDFLAGS_DEBUG=$(LDFLAGS_BASE)
 LDFLAGS_RELEASE=$(LDFLAGS_BASE)
 
-.PHONY: debug
-debug: OBJDIR=$(OBJDIR_DEBUG)
-debug: DISTDIR=$(DISTDIR_DEBUG)
-debug: CFLAGS=$(CFLAGS_DEBUG)
-debug: LDFLAGS=$(LDFLAGS_DEBUG)
+.PHONY: default
+default: osx
 
-.PHONY: release
-release: OBJDIR=$(OBJDIR_RELEASE)
-release: DISTDIR=$(DISTDIR_RELEASE)
-release: CFLAGS=$(CFLAGS_RELEASE)
-release: LDFLAGS=$(LDFLAGS_RELEASE)
+.PHONY: help
+help:
+	echo "make <platform>"
+	echo "platform: osx"
 
-.PHONY: all debug release clean distclean test
+.PHONY: osx
+osx:
+	$(MAKE) PLATFORM="osx" build_platform 
 
-all: debug release
+.PHONY: build_platform
+build_platform: $(PLATFORM)_debug $(PLATFORM)_release
 
-debug:
-	$(MAKE) OBJDIR="$(OBJDIR_DEBUG)" DISTDIR="$(DISTDIR_DEBUG)" CFLAGS="$(CFLAGS_DEBUG)" LDFLAGS="$(LDFLAGS_DEBUG)" $(DIST)
+.PHONY: $(PLATFORM)_debug
+$(PLATFORM)_debug:
+	$(MAKE) BUILD="debug" CFLAGS="$(CFLAGS_DEBUG)" LDFLAGS="$(LDFLAGS_DEBUG)" dist 
 
-release: 
-	$(MAKE) OBJDIR="$(OBJDIR_RELEASE)" DISTDIR="$(DISTDIR_RELEASE)" CFLAGS="$(CFLAGS_RELEASE)" LDFLAGS="$(LDFLAGS_RELEASE)" $(DIST)
+.PHONY: $(PLATFORM)_release
+$(PLATFORM)_release: 
+	$(MAKE) BUILD="release" CFLAGS="$(CFLAGS_RELEASE)" LDFLAGS="$(LDFLAGS_RELEASE)" dist 
+
+.PHONY: dist
+dist: $(DIST)
 
 $(OBJDIR)/%.o : src/%.cpp
-	-mkdir -p $(OBJDIR)/$(^D)
+	-mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ $<
 
 $(DIST): $(OBJPATHS)
-	-mkdir -p $(DISTDIR)
+	-mkdir -p $(@D)
 	$(LD) $(LDFLAGS) -o $@ $^
 
+.PHONY: clean
 clean:
 	-rm -fr $(OBJDIR_BASE)
 
+.PHONY: distclean
 distclean:
-	-rm -f $(DISTDIR_BASE)
+	-rm -fr $(DISTDIR_BASE)
 
+.PHONY: test
 test: $(DIST)
 	$(MAKE) -C test run
 
