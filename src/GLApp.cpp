@@ -11,7 +11,12 @@ int main(int argc, char *argv[]) {
 	return GLApp::mainApp()->main(argc, argv);
 }
 
+void GLApp::requestExit() {
+	done = true;
+}
+
 int GLApp::main(int argc, char **argv) {
+	done = false;
 	int sdlInitFlags = SDL_INIT_VIDEO;
 
 //SDL init
@@ -44,7 +49,6 @@ int GLApp::main(int argc, char **argv) {
 			resize(width, height);
 
 			SDL_Event event;
-			bool done = false;
 			do {
 				while (SDL_PollEvent(&event) > 0) {
 					switch (event.type) {
@@ -86,6 +90,8 @@ int GLApp::main(int argc, char **argv) {
 		cerr << e.what() << endl;
 	}
 
+	shutdown();
+
 	return 0;
 }
 
@@ -103,3 +109,5 @@ void GLApp::update() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void GLApp::shutdown() {
+}
