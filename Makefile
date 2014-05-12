@@ -14,13 +14,11 @@ OBJPATHS=$(addprefix $(OBJDIR)/, $(OBJECTS))
 
 CC=clang++
 CFLAGS_BASE=-c -Wall -Iinclude -std=c++11
-CFLAGS_DEBUG=$(CFLAGS_BASE) -O0 -mfix-and-continue -gdwarf-2 -DDEBUG
-CFLAGS_RELEASE=$(CFLAGS_BASE) -O3 -DNDEBUG
+CFLAGS_debug=-O0 -mfix-and-continue -gdwarf-2 -DDEBUG
+CFLAGS_release=-O3 -DNDEBUG
 
 LD=clang++
 LDFLAGS_BASE=-dynamiclib -undefined suppress -flat_namespace
-LDFLAGS_DEBUG=$(LDFLAGS_BASE)
-LDFLAGS_RELEASE=$(LDFLAGS_BASE)
 
 .PHONY: default
 default: osx
@@ -39,13 +37,17 @@ build_platform: $(PLATFORM)_debug $(PLATFORM)_release
 
 .PHONY: $(PLATFORM)_debug
 $(PLATFORM)_debug:
-	$(MAKE) BUILD="debug" CFLAGS="$(CFLAGS_DEBUG)" LDFLAGS="$(LDFLAGS_DEBUG)" dist 
+	$(MAKE) BUILD="debug" dist 
 
 .PHONY: $(PLATFORM)_release
 $(PLATFORM)_release: 
-	$(MAKE) BUILD="release" CFLAGS="$(CFLAGS_RELEASE)" LDFLAGS="$(LDFLAGS_RELEASE)" dist 
+	$(MAKE) BUILD="release" dist 
 
 .PHONY: dist
+dist: CFLAGS= $(CFLAGS_BASE)
+dist: CFLAGS+= $(CFLAGS_$(BUILD))
+dist: LDFLAGS= $(LDFLAGS_BASE)
+dist: LDFLAGS+= $(LDFLAGS_$(BUILD))
 dist: $(DIST)
 
 $(OBJDIR)/%.o : src/%.cpp
