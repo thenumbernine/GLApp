@@ -4,7 +4,7 @@
 DIST_FILENAME=libGLApp.dylib
 DIST_TYPE=dylib
 
-OBJECTS=GLApp.o
+CFLAGS_BASE+= -arch i386 -arch x86_64
+LDFLAGS_BASE+= -arch i386 -arch x86_64
 
 include Makefile.mk
-

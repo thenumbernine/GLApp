@@ -2,6 +2,11 @@ DISTDIR_BASE=dist
 DISTDIR=$(DISTDIR_BASE)/$(PLATFORM)/$(BUILD)
 DIST=$(DISTDIR)/$(DIST_FILENAME)
 
+SRCDIR_BASE=src
+SOURCES=$(shell find $(SRCDIR_BASE) -type f -name *.cpp)
+HEADERS=$(shell find include -type f)
+OBJECTS=$(patsubst $(SRCDIR_BASE)/%.cpp, %.o, $(SOURCES))
+
 OBJDIR_BASE=obj
 OBJDIR=$(OBJDIR_BASE)/$(PLATFORM)/$(BUILD)
 OBJPATHS=$(addprefix $(OBJDIR)/, $(OBJECTS))
@@ -46,7 +51,7 @@ dist: LDFLAGS= $(LDFLAGS_BASE)
 dist: LDFLAGS+= $(LDFLAGS_$(BUILD))
 dist: $(DIST)
 
-$(OBJDIR)/%.o : src/%.cpp $(HEADERS)
+$(OBJDIR)/%.o : $(SRCDIR_BASE)/%.cpp $(HEADERS)
 	-mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ $<
 
