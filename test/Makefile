@@ -1,13 +1,10 @@
-.PHONY: all run clean
+DIST_FILENAME=test
+DIST_TYPE=app
 
-all: test
+include ../Makefile.mk
 
-test: test.cpp
-	clang++ test.cpp -o test -I../include -L../dist/osx -lSDL -lSDLmain -lglapp -framework Cocoa -framework OpenGL
-	install_name_tool -change dist/osx/libGLApp.dylib ../dist/osx/libGLApp.dylib test
+CFLAGS_BASE+= -I../include
 
-run: test
-	./test
+$(DIST):: $(OBJPATHS)
+	install_name_tool -change dist/$(PLATFORM)/$(BUILD)/libGLApp.dylib ../dist/$(PLATFORM)/$(BUILD)/libGLApp.dylib dist/$(PLATFORM)/$(BUILD)/test
 
-clean:
-	-rm test

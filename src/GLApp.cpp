@@ -1,7 +1,10 @@
 #include "GLApp/GLApp.h"
+
 #include "Common/Exception.h"
+#include "Common/Finally.h"
+
 #include <iostream>
-#include <SDL/SDL.h>	//main
+#include <SDL2/SDL.h>	//main
 #include <OpenGL/gl.h>
 
 using namespace std;
@@ -11,81 +14,72 @@ int main(int argc, char *argv[]) {
 	return GLApp::mainApp()->main(argc, argv);
 }
 
-void GLApp::requestExit() {
-	done = true;
-}
+GLApp::GLApp() : window(NULL), context(SDL_GLContext()) {}
 
 int GLApp::main(int argc, char **argv) {
 	done = false;
-	int sdlInitFlags = SDL_INIT_VIDEO;
 
 //SDL init
 
 	try {
-		int sdlInitError = SDL_Init(sdlInitFlags);
+		int sdlInitError = SDL_Init(getSDLInitFlags());
 		if (sdlInitError) throw Exception() << "SDL_Init failed with error code " << sdlInitError;
 
-		try {
-			int width = 640;
-			int height = 480;
-
-			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-			int screenFlags = SDL_OPENGL | SDL_DOUBLEBUF | SDL_RESIZABLE;
+		Finally sdlFinally([&](){ SDL_Quit(); });
 			
-			/*SDL_Surface *screen = */SDL_SetVideoMode(width, height, 0, screenFlags);
-			
-			const char *title = "OpenGL App";
-			SDL_WM_SetCaption(title, NULL);
-			SDL_EnableKeyRepeat(0,0);
-			//SDL_GL_SetSwapInterval(1);
+		int width = 640;
+		int height = 480;
 
-			init();
-			resize(width, height);
+		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-			SDL_Event event;
-			do {
-				while (SDL_PollEvent(&event) > 0) {
-					switch (event.type) {
-					case SDL_QUIT:
-						done = true;
-						break;
-					case SDL_VIDEORESIZE:
-						width = event.resize.w;
-						height = event.resize.h;
-						resize(width, height);
-					case SDL_KEYDOWN:
+		window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
+		if (!window) throw Exception() << "failed to create window";
+
+		context = SDL_GL_CreateContext(window);
+		if (!context) throw Exception() << "failed to create GL context";
+
+		SDL_GL_SetSwapInterval(1);
+
+		init();
+		resize(width, height);
+
+		SDL_Event event;
+		do {
+			while (SDL_PollEvent(&event) > 0) {
+				switch (event.type) {
+				case SDL_QUIT:
+					done = true;
+					break;
+				case SDL_WINDOWEVENT_RESIZED:
+					width = event.window.data1;
+					height = event.window.data2;
+					resize(width, height);
+				case SDL_KEYDOWN:
 #if PLATFORM==WINDOWS
-							if (event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) != 0) {
-								done = true;
-							}
+						if (event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) != 0) {
+							done = true;
+						}
 #endif
 #if PLATFORM==OSX
-							if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_META) != 0) {
-								done = true;
-							}
+						if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_GUI) != 0) {
+							done = true;
+						}
 #endif
-						break;
-					}
-					sdlEvent(event);
+					break;
 				}
+				sdlEvent(event);
+			}
 
-				update();
+			update();
 
-				SDL_GL_SwapBuffers();
-			} while (!done);
+			SDL_GL_SwapWindow(window);
+		} while (!done);
 
-		} catch (std::exception &e) {
-			cerr << e.what() << endl;
-		}
-
-		SDL_Quit();
-	
 	} catch (std::exception &e) {
 		cerr << e.what() << endl;
 	}
@@ -93,6 +87,18 @@ int GLApp::main(int argc, char **argv) {
 	shutdown();
 
 	return 0;
+}
+
+void GLApp::requestExit() {
+	done = true;
+}
+
+const char *GLApp::getTitle() {
+	return "OpenGL App";
+}
+
+int GLApp::getSDLInitFlags() {
+	return SDL_INIT_VIDEO;
 }
 
 void GLApp::init() {
@@ -111,3 +117,4 @@ void GLApp::update() {
 
 void GLApp::shutdown() {
 }
+

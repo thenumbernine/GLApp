@@ -16,9 +16,12 @@ CFLAGS_BASE=-c -Wall -Iinclude -std=c++11
 CFLAGS_debug=-O0 -mfix-and-continue -gdwarf-2 -DDEBUG
 CFLAGS_release=-O3 -DNDEBUG
 
+#PATH_TO_GLAPP=../GLApp
+PATH_TO_GLAPP=$(dir $(lastword $(MAKEFILE_LIST)))
+
 LD=clang++
 LDFLAGS_dylib=-dynamiclib -undefined suppress -flat_namespace
-LDFLAGS_app=-L../GLApp/dist/$(PLATFORM)/$(BUILD) -lGLApp -lSDL -lSDLmain -framework Cocoa -framework OpenGL
+LDFLAGS_app=-L$(PATH_TO_GLAPP)/dist/$(PLATFORM)/$(BUILD) -lGLApp -lSDL2 -lSDL2main -framework Cocoa -framework OpenGL
 LDFLAGS_BASE=$(LDFLAGS_$(DIST_TYPE))
 
 .PHONY: default
@@ -69,8 +72,4 @@ clean:
 .PHONY: distclean
 distclean:
 	-rm -fr $(DISTDIR_BASE)
-
-.PHONY: test
-test: $(DIST)
-	$(MAKE) -C test run
 
