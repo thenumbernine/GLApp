@@ -12,21 +12,22 @@ struct Test : public GLApp {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glFrustum(-aspectRatio * zNear, aspectRatio * zNear, -zNear, zNear, zNear, zFar);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glTranslatef(0.f, 0.f, -2.f);
 	}
 	virtual void update() {
 		GLApp::update();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glTranslatef(0.f, 0.f, -2.f);
 		glRotatef(angle,0.f,1.f,0.f);
 		glBegin(GL_TRIANGLES);
 		glColor3f(1.f,0.f,0.f);
-		glVertex3f( 0.f, 1.f, 0.f);
+		glVertex3f(0.f, 1.25f,0.f);
 		glColor3f(0.f,1.f,0.f);
-		glVertex3f(-1.f,-1.f, 0.f);
+		glVertex3f(-1.f,-.75f,0.f);
 		glColor3f(0.f,0.f,1.f);
-		glVertex3f( 1.f,-1.f, 0.f);
+		glVertex3f(1.f,-.75f,0.f);
 		glEnd();
+		++angle;
 	}
 };
 
