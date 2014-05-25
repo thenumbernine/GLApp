@@ -22,7 +22,10 @@ LDFLAGS_app=-L../GLApp/dist/$(PLATFORM)/$(BUILD) -lGLApp -lSDL -lSDLmain -framew
 LDFLAGS_BASE=$(LDFLAGS_$(DIST_TYPE))
 
 .PHONY: default
-default: osx
+default: all
+
+.PHONY: all
+all: osx
 
 .PHONY: help
 help:
