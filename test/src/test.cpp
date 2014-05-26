@@ -1,10 +1,15 @@
 #include <glapp/glapp.h>
 #include <OpenGL/gl.h>
-
+#include <iostream>
 struct Test : public GLApp {
 	float angle;
 	Test() : GLApp(), angle(0.) {}
+	virtual void init() {
+		GLApp::init();
+		glClearColor(.5, .75, .75, 1.);
+	}
 	virtual void resize(int width, int height) {
+		std::cout << "RESIZE! " << width << " " << height << std::endl;
 		GLApp::resize(width, height);
 		float aspectRatio = (float)width / (float)height;
 		float zNear = .1f;

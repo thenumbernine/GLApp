@@ -55,17 +55,22 @@ int GLApp::main(int argc, char **argv) {
 				case SDL_QUIT:
 					done = true;
 					break;
-				case SDL_WINDOWEVENT_RESIZED:
-					width = event.window.data1;
-					height = event.window.data2;
-					resize(width, height);
+				case SDL_WINDOWEVENT:
+					switch (event.window.event) {
+					case SDL_WINDOWEVENT_RESIZED:
+						width = event.window.data1;
+						height = event.window.data2;
+						resize(width, height);
+						break;
+					}
+					break;
 				case SDL_KEYDOWN:
-#if PLATFORM_WINDOWS
+#if PLATFORM_windows
 						if (event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) != 0) {
 							done = true;
 						}
 #endif
-#if PLATFORM_OSX
+#if PLATFORM_osx
 						if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_GUI) != 0) {
 							done = true;
 						}
@@ -105,6 +110,7 @@ void GLApp::init() {
 }
 
 void GLApp::resize(int width, int height) {
+	SDL_SetWindowSize(window, width, height);
 	glViewport(0, 0, width, height);
 }
 

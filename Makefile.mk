@@ -13,8 +13,8 @@ OBJPATHS=$(addprefix $(OBJDIR)/, $(OBJECTS))
 
 CC=clang++
 CFLAGS_BASE=-c -Wall -Iinclude -std=c++11 -DPLATFORM_$(PLATFORM) -DBUILD_$(BUILD)
-CFLAGS_DEBUG=-O0 -mfix-and-continue -gdwarf-2 -DDEBUG
-CFLAGS_RELEASE=-O3 -DNDEBUG
+CFLAGS_debug=-O0 -mfix-and-continue -gdwarf-2 -DDEBUG
+CFLAGS_release=-O3 -DNDEBUG
 
 #PATH_TO_GLAPP=../GLApp
 PATH_TO_GLAPP=$(dir $(lastword $(MAKEFILE_LIST)))
@@ -37,18 +37,18 @@ help:
 
 .PHONY: osx
 osx:
-	$(MAKE) PLATFORM="OSX" build_platform
+	$(MAKE) PLATFORM="osx" build_platform
 
 .PHONY: build_platform
-build_platform: $(PLATFORM)_DEBUG $(PLATFORM)_RELEASE
+build_platform: $(PLATFORM)_debug $(PLATFORM)_release
 
-.PHONY: $(PLATFORM)_DEBUG
-$(PLATFORM)_DEBUG:
-	$(MAKE) BUILD="DEBUG" dist
+.PHONY: $(PLATFORM)_debug
+$(PLATFORM)_debug:
+	$(MAKE) BUILD="debug" dist
 
-.PHONY: $(PLATFORM)_RELEASE
-$(PLATFORM)_RELEASE:
-	$(MAKE) BUILD="RELEASE" dist
+.PHONY: $(PLATFORM)_release
+$(PLATFORM)_release:
+	$(MAKE) BUILD="release" dist
 
 .PHONY: dist
 dist: CFLAGS= $(CFLAGS_BASE)
