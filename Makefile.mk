@@ -15,6 +15,9 @@ CC=clang++
 CFLAGS_BASE=-c -Wall -Iinclude -std=c++11
 CFLAGS_debug=-O0 -mfix-and-continue -gdwarf-2 -DDEBUG
 CFLAGS_release=-O3 -DNDEBUG
+# there has to be a better way to do this ... -DPLATFORM_$(PLATFORM) isn't working ...
+CFLAGS_osx=-DPLATFORM_OSX
+CFLAGS_windows=-DPLATFORM_WINDOWS
 
 #PATH_TO_GLAPP=../GLApp
 PATH_TO_GLAPP=$(dir $(lastword $(MAKEFILE_LIST)))
@@ -52,7 +55,9 @@ $(PLATFORM)_release:
 
 .PHONY: dist
 dist: CFLAGS= $(CFLAGS_BASE)
+dist: CFLAGS+= $(CFLAGS_$(PLATFORM))
 dist: CFLAGS+= $(CFLAGS_$(BUILD))
+dist: CFLAGS+= $(CFLAGS_$(PLATFORM)_$(BUILD))
 dist: LDFLAGS= $(LDFLAGS_BASE)
 dist: LDFLAGS+= $(LDFLAGS_$(BUILD))
 dist: $(DIST)

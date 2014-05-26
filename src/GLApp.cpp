@@ -60,12 +60,12 @@ int GLApp::main(int argc, char **argv) {
 					height = event.window.data2;
 					resize(width, height);
 				case SDL_KEYDOWN:
-#if PLATFORM==WINDOWS
+#if PLATFORM_WINDOWS
 						if (event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) != 0) {
 							done = true;
 						}
 #endif
-#if PLATFORM==OSX
+#if PLATFORM_OSX
 						if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_GUI) != 0) {
 							done = true;
 						}

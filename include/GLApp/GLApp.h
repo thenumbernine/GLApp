@@ -35,7 +35,7 @@ public:
 
 	//used for access
 	SDL_Window *getWindow() { return window; }
-	SDL_GLContext getContext() { return context; }
+	SDL_GLContext getGLContext() { return context; }
 };
 
 #define GLAPP_MAIN(classname)	\
