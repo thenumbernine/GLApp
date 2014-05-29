@@ -2,6 +2,8 @@
 
 #include <stdlib.h>	//NULL
 #include <SDL2/SDL.h>
+#include <vector>
+#include <string>
 
 class GLApp {
 protected:
@@ -19,7 +21,7 @@ public:
 
 	GLApp();
 
-	virtual int main(int argc = 0, char **argv = NULL);
+	virtual int main(std::vector<std::string> args);
 
 	virtual void requestExit();	//request exit
 	

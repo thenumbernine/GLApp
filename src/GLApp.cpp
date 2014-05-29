@@ -6,17 +6,23 @@
 #include <iostream>
 #include <SDL2/SDL.h>	//main
 #include <OpenGL/gl.h>
+#include <string>
+#include <vector>
+#include <algorithm>
+
 
 using namespace std;
 
 //main...
 int main(int argc, char *argv[]) {
-	return GLApp::mainApp()->main(argc, argv);
+	std::vector<std::string> args;
+	std::copy(argv, argv+argc, std::back_inserter<std::vector<std::string>>(args));
+	return GLApp::mainApp()->main(args);
 }
 
 GLApp::GLApp() : window(NULL), context(SDL_GLContext()) {}
 
-int GLApp::main(int argc, char **argv) {
+int GLApp::main(std::vector<std::string> args) {
 	done = false;
 
 //SDL init
