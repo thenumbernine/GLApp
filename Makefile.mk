@@ -11,20 +11,25 @@ OBJDIR_BASE=obj
 OBJDIR=$(OBJDIR_BASE)/$(PLATFORM)/$(BUILD)
 OBJPATHS=$(addprefix $(OBJDIR)/, $(OBJECTS))
 
-INCLUDE_BASE=include
+INCLUDE=include
+
+MACROS=PLATFORM_$(PLATFORM) BUILD_$(BUILD)
+MACROS_debug=DEBUG
+MACROS_release=NDEBUG
 
 CC=clang++
-CFLAGS_BASE=-c -Wall -std=c++11 -DPLATFORM_$(PLATFORM) -DBUILD_$(BUILD)
-CFLAGS_debug=-O0 -mfix-and-continue -gdwarf-2 -DDEBUG
-CFLAGS_release=-O3 -DNDEBUG
+CFLAGS=-c -Wall -std=c++11
+CFLAGS_debug=-O0 -mfix-and-continue -gdwarf-2
+CFLAGS_release=-O3
 
-#PATH_TO_GLAPP=../GLApp
 PATH_TO_GLAPP=$(dir $(lastword $(MAKEFILE_LIST)))
+
+LIBS_app=GLApp SDL2 SDL2main
+LIBPATHS_app=$(PATH_TO_GLAPP)/dist/$(PLATFORM)/$(BUILD)
 
 LD=clang++
 LDFLAGS_dylib=-dynamiclib -undefined suppress -flat_namespace
-LDFLAGS_app=-L$(PATH_TO_GLAPP)/dist/$(PLATFORM)/$(BUILD) -lGLApp -lSDL2 -lSDL2main -framework Cocoa -framework OpenGL
-LDFLAGS_BASE=$(LDFLAGS_$(DIST_TYPE))
+LDFLAGS_app= -framework Cocoa -framework OpenGL
 
 .PHONY: default
 default: all
@@ -52,17 +57,22 @@ $(PLATFORM)_debug:
 $(PLATFORM)_release:
 	$(MAKE) BUILD="release" dist
 
+buildVar = \
+	$($(1)_$(PLATFORM))\
+	$($(1)_$(BUILD))\
+	$($(1)_$(DIST_TYPE))\
+	$($(1)_$(DIST_TYPE)_$(PLATFORM))\
+	$($(1)_$(DIST_TYPE)_$(BUILD))\
+	$($(1)_$(PLATFORM)_$(BUILD))\
+	$($(1)_$(DIST_TYPE)_$(PLATFORM)_$(BUILD))
+
 .PHONY: dist
-dist: CFLAGS= $(CFLAGS_BASE)
-dist: CFLAGS+= $(CFLAGS_$(PLATFORM))
-dist: CFLAGS+= $(CFLAGS_$(BUILD))
-dist: CFLAGS+= $(CFLAGS_$(PLATFORM)_$(BUILD))
-dist: CFLAGS+= $(addprefix -I,$(INCLUDE_BASE))
-dist: CFLAGS+= $(addprefix -I,$(INCLUDE_$(PLATFORM)))
-dist: CFLAGS+= $(addprefix -I,$(INCLUDE_$(BUILD)))
-dist: CFLAGS+= $(addprefix -I,$(INCLUDE_$(PLATFORM)_$(BUILD)))
-dist: LDFLAGS= $(LDFLAGS_BASE)
-dist: LDFLAGS+= $(LDFLAGS_$(BUILD))
+dist: CFLAGS+= $(call buildVar,CFLAGS)
+dist: CFLAGS+= $(addprefix -I,$(INCLUDE) $(call buildVar,INCLUDE))
+dist: CFLAGS+= $(addprefix -D,$(MACROS) $(call buildVar,MACROS))
+dist: LDFLAGS+= $(call buildVar,LDFLAGS)
+dist: LDFLAGS+= $(addprefix -l,$(LIBS) $(call buildVar,LIBS))
+dist: LDFLAGS+= $(addprefix -L,$(LIBPATHS) $(call buildVar,LIBPATHS))
 dist: $(DIST)
 
 $(OBJDIR)/%.o : $(SRCDIR_BASE)/%.cpp $(HEADERS)
