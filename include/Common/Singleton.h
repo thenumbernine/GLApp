@@ -1,5 +1,4 @@
 #pragma once
-#define DEFS_SINGLETON_H
 
 template<typename T>
 class Singleton {
