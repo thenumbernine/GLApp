@@ -11,8 +11,10 @@ OBJDIR_BASE=obj
 OBJDIR=$(OBJDIR_BASE)/$(PLATFORM)/$(BUILD)
 OBJPATHS=$(addprefix $(OBJDIR)/, $(OBJECTS))
 
+INCLUDE_BASE=include
+
 CC=clang++
-CFLAGS_BASE=-c -Wall -Iinclude -std=c++11 -DPLATFORM_$(PLATFORM) -DBUILD_$(BUILD)
+CFLAGS_BASE=-c -Wall -std=c++11 -DPLATFORM_$(PLATFORM) -DBUILD_$(BUILD)
 CFLAGS_debug=-O0 -mfix-and-continue -gdwarf-2 -DDEBUG
 CFLAGS_release=-O3 -DNDEBUG
 
@@ -55,6 +57,10 @@ dist: CFLAGS= $(CFLAGS_BASE)
 dist: CFLAGS+= $(CFLAGS_$(PLATFORM))
 dist: CFLAGS+= $(CFLAGS_$(BUILD))
 dist: CFLAGS+= $(CFLAGS_$(PLATFORM)_$(BUILD))
+dist: CFLAGS+= $(addprefix -I,$(INCLUDE_BASE))
+dist: CFLAGS+= $(addprefix -I,$(INCLUDE_$(PLATFORM)))
+dist: CFLAGS+= $(addprefix -I,$(INCLUDE_$(BUILD)))
+dist: CFLAGS+= $(addprefix -I,$(INCLUDE_$(PLATFORM)_$(BUILD)))
 dist: LDFLAGS= $(LDFLAGS_BASE)
 dist: LDFLAGS+= $(LDFLAGS_$(BUILD))
 dist: $(DIST)
