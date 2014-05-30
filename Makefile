@@ -1,8 +1,8 @@
 # PLATFORM: osx
 # BUILD: debug, release
 
-DIST_FILENAME=libGLApp.dylib
-DIST_TYPE=dylib
+DIST_FILENAME=GLApp
+DIST_TYPE=lib
 
 include Makefile.mk
 

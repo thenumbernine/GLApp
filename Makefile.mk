@@ -1,6 +1,15 @@
-DISTDIR_BASE=dist
-DISTDIR=$(DISTDIR_BASE)/$(PLATFORM)/$(BUILD)
-DIST=$(DISTDIR)/$(DIST_FILENAME)
+buildVar = \
+	$($(1)_$(PLATFORM))\
+	$($(1)_$(BUILD))\
+	$($(1)_$(DIST_TYPE))\
+	$($(1)_$(PLATFORM)_$(DIST_TYPE))\
+	$($(1)_$(DIST_TYPE)_$(BUILD))\
+	$($(1)_$(PLATFORM)_$(BUILD))\
+	$($(1)_$(PLATFORM)_$(DIST_TYPE)_$(BUILD))
+
+space :=
+space +=
+concat = $(subst $(space),,$(strip $1))
 
 SRCDIR_BASE=src
 SOURCES=$(shell find $(SRCDIR_BASE) -type f -name *.cpp)
@@ -28,7 +37,7 @@ LIBS_app=GLApp SDL2 SDL2main
 LIBPATHS_app=$(PATH_TO_GLAPP)/dist/$(PLATFORM)/$(BUILD)
 
 LD=clang++
-LDFLAGS_dylib=-dynamiclib -undefined suppress -flat_namespace
+LDFLAGS_lib=-dynamiclib -undefined suppress -flat_namespace
 LDFLAGS_app= -framework Cocoa -framework OpenGL
 
 .PHONY: default
@@ -51,29 +60,29 @@ build_platform: $(PLATFORM)_debug $(PLATFORM)_release
 
 .PHONY: $(PLATFORM)_debug
 $(PLATFORM)_debug:
-	$(MAKE) BUILD="debug" dist
+	$(MAKE) BUILD="debug" builddist
 
 .PHONY: $(PLATFORM)_release
 $(PLATFORM)_release:
-	$(MAKE) BUILD="release" dist
+	$(MAKE) BUILD="release" builddist
 
-buildVar = \
-	$($(1)_$(PLATFORM))\
-	$($(1)_$(BUILD))\
-	$($(1)_$(DIST_TYPE))\
-	$($(1)_$(DIST_TYPE)_$(PLATFORM))\
-	$($(1)_$(DIST_TYPE)_$(BUILD))\
-	$($(1)_$(PLATFORM)_$(BUILD))\
-	$($(1)_$(DIST_TYPE)_$(PLATFORM)_$(BUILD))
+DISTDIR_BASE=dist
+DISTDIR=$(DISTDIR_BASE)/$(PLATFORM)/$(BUILD)
+DIST_PREFIX_osx_lib=lib
+DIST_SUFFIX_osx_lib=.dylib
+DIST=$(call concat,$(DISTDIR)/$(call buildVar,DIST_PREFIX)$(DIST_FILENAME)$(call buildVar,DIST_SUFFIX))
 
-.PHONY: dist
-dist: CFLAGS+= $(call buildVar,CFLAGS)
-dist: CFLAGS+= $(addprefix -I,$(INCLUDE) $(call buildVar,INCLUDE))
-dist: CFLAGS+= $(addprefix -D,$(MACROS) $(call buildVar,MACROS))
-dist: LDFLAGS+= $(call buildVar,LDFLAGS)
-dist: LDFLAGS+= $(addprefix -l,$(LIBS) $(call buildVar,LIBS))
-dist: LDFLAGS+= $(addprefix -L,$(LIBPATHS) $(call buildVar,LIBPATHS))
-dist: $(DIST)
+.PHONY: builddist
+builddist: 
+	@echo done with $(DIST)
+	@echo
+builddist: CFLAGS+= $(call buildVar,CFLAGS)
+builddist: CFLAGS+= $(addprefix -I,$(INCLUDE) $(call buildVar,INCLUDE))
+builddist: CFLAGS+= $(addprefix -D,$(MACROS) $(call buildVar,MACROS))
+builddist: LDFLAGS+= $(call buildVar,LDFLAGS)
+builddist: LDFLAGS+= $(addprefix -l,$(LIBS) $(call buildVar,LIBS))
+builddist: LDFLAGS+= $(addprefix -L,$(LIBPATHS) $(call buildVar,LIBPATHS))
+builddist: $(DIST)
 
 $(OBJDIR)/%.o : $(SRCDIR_BASE)/%.cpp $(HEADERS)
 	-mkdir -p $(@D)
