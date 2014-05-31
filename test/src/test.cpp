@@ -1,6 +1,6 @@
-#include <glapp/glapp.h>
+#include <GLApp/GLApp.h>
 #include <OpenGL/gl.h>
-struct Test : public GLApp {
+struct Test : public GLApp::GLApp {
 	float angle;
 	Test() : GLApp(), angle(0.) {}
 	virtual void init() {

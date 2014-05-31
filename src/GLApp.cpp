@@ -10,15 +10,16 @@
 #include <vector>
 #include <algorithm>
 
-
-using namespace std;
+using namespace Common;
 
 //main...
 int main(int argc, char *argv[]) {
 	std::vector<std::string> args;
 	std::copy(argv, argv+argc, std::back_inserter<std::vector<std::string>>(args));
-	return GLApp::mainApp()->main(args);
+	return ::GLApp::GLApp::mainApp()->main(args);
 }
+
+namespace GLApp {
 
 GLApp::GLApp() : window(NULL), context(SDL_GLContext()) {}
 
@@ -92,7 +93,7 @@ int GLApp::main(std::vector<std::string> args) {
 		} while (!done);
 
 	} catch (std::exception &e) {
-		cerr << e.what() << endl;
+		std::cerr << e.what() << std::endl;
 	}
 
 	shutdown();
@@ -129,4 +130,6 @@ void GLApp::update() {
 
 void GLApp::shutdown() {
 }
+
+};
 

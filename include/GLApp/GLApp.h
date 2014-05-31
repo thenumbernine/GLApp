@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+namespace GLApp {
+
 class GLApp {
 protected:
 	bool done;
@@ -40,8 +42,10 @@ public:
 	SDL_GLContext getGLContext() { return context; }
 };
 
+};
+
 #define GLAPP_MAIN(classname)	\
-	GLApp *GLApp::mainApp() {	\
+	::GLApp::GLApp *::GLApp::GLApp::mainApp() {	\
 		static classname glapp_main;	\
 		return &glapp_main;	\
 	}
