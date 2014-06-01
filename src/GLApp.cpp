@@ -10,12 +10,23 @@
 #include <vector>
 #include <algorithm>
 
+#ifdef PLATFORM_osx
+#include <unistd.h>
+#endif
+
 using namespace Common;
 
 //main...
 int main(int argc, char *argv[]) {
 	std::vector<std::string> args;
 	std::copy(argv, argv+argc, std::back_inserter<std::vector<std::string>>(args));
+#ifdef PLATFORM_osx
+	if (args.size() == 0) throw Common::Exception() << "expected arg for the exe path";
+	std::string exe = args[0];
+	exe = exe.substr(0, exe.find_last_of('/'));
+	exe = exe.substr(0, exe.find_last_of('/')) + "/Resources";
+	chdir(exe.c_str());
+#endif
 	return ::GLApp::GLApp::mainApp()->main(args);
 }
 
