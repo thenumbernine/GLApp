@@ -23,7 +23,7 @@ public:
 
 	GLApp();
 
-	virtual int main(std::vector<std::string> args);
+	virtual int main(const std::vector<std::string>& args);
 
 	virtual void requestExit();	//request exit
 	
