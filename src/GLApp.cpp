@@ -131,7 +131,7 @@ void GLApp::sdlEvent(SDL_Event &event) {
 }
 
 void GLApp::update() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void GLApp::shutdown() {
