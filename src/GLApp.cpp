@@ -14,8 +14,6 @@
 #include <unistd.h>
 #endif
 
-using namespace Common;
-
 //main...
 int main(int argc, char *argv[]) {
 	std::vector<std::string> args;
@@ -40,9 +38,9 @@ int GLApp::main(const std::vector<std::string>& args) {
 //SDL init
 
 	int sdlInitError = SDL_Init(getSDLInitFlags());
-	if (sdlInitError) throw Exception() << "SDL_Init failed with error code " << sdlInitError;
+	if (sdlInitError) throw Common::Exception() << "SDL_Init failed with error code " << sdlInitError;
 
-	Finally sdlFinally([&](){ SDL_Quit(); });
+	Common::Finally sdlFinally([&](){ SDL_Quit(); });
 		
 	int width = 640;
 	int height = 480;
@@ -55,10 +53,10 @@ int GLApp::main(const std::vector<std::string>& args) {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
-	if (!window) throw Exception() << "failed to create window";
+	if (!window) throw Common::Exception() << "failed to create window";
 
 	context = SDL_GL_CreateContext(window);
-	if (!context) throw Exception() << "failed to create GL context";
+	if (!context) throw Common::Exception() << "failed to create GL context";
 
 	SDL_GL_SetSwapInterval(1);
 
