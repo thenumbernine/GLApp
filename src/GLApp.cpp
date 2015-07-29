@@ -125,7 +125,7 @@ void GLApp::resize(int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
-void GLApp::sdlEvent(SDL_Event &event) {
+void GLApp::sdlEvent(SDL_Event& event) {
 }
 
 void GLApp::update() {
@@ -133,6 +133,8 @@ void GLApp::update() {
 }
 
 void GLApp::shutdown() {
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 };
