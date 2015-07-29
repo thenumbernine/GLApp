@@ -30,7 +30,11 @@ int main(int argc, char *argv[]) {
 
 namespace GLApp {
 
-GLApp::GLApp() : window(NULL), context(SDL_GLContext()) {}
+GLApp::GLApp()
+: window(nullptr)
+, context(SDL_GLContext())
+, swap(true)
+{}
 
 int GLApp::main(const std::vector<std::string>& args) {
 	done = false;
@@ -98,7 +102,7 @@ int GLApp::main(const std::vector<std::string>& args) {
 
 		update();
 
-		//SDL_GL_SwapWindow(window);
+		if (swap) SDL_GL_SwapWindow(window);
 	} while (!done);
 
 	shutdown();

@@ -12,9 +12,10 @@ protected:
 	bool done;
 	SDL_Window *window;
 	SDL_GLContext context;
+public:
+	bool swap;
 
 public:
-
 	/*
 	the external program's subclass of GLApp will implement this to return an instance of itself
 	 (using the GLAPP_MAIN macro)
