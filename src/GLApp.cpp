@@ -54,6 +54,7 @@ int GLApp::main(const std::vector<std::string>& args) {
 
 	window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
 	if (!window) throw Common::Exception() << "failed to create window";
+	Common::Finally sdlWindowFinally([&](){ SDL_DestroyWindow(window); });
 
 	context = SDL_GL_CreateContext(window);
 	if (!context) throw Common::Exception() << "failed to create GL context";
@@ -97,7 +98,7 @@ int GLApp::main(const std::vector<std::string>& args) {
 
 		update();
 
-		SDL_GL_SwapWindow(window);
+		//SDL_GL_SwapWindow(window);
 	} while (!done);
 
 	shutdown();
@@ -133,8 +134,6 @@ void GLApp::update() {
 }
 
 void GLApp::shutdown() {
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 }
 
 };
