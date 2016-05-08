@@ -62,6 +62,7 @@ int GLApp::main(const std::vector<std::string>& args) {
 
 	context = SDL_GL_CreateContext(window);
 	if (!context) throw Common::Exception() << "failed to create GL context";
+	Common::Finally sdlGlContextFinally([&](){ SDL_GL_DeleteContext(context); });
 
 	SDL_GL_SetSwapInterval(0);
 

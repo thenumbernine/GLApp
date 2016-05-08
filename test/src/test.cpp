@@ -1,12 +1,16 @@
 #include <GLApp/GLApp.h>
 #include <OpenGL/gl.h>
+
 struct Test : public GLApp::GLApp {
 	float angle;
+	
 	Test() : GLApp(), angle(0.) {}
+	
 	virtual void init() {
 		GLApp::init();
 		glClearColor(.5, .75, .75, 1.);
 	}
+	
 	virtual void resize(int width, int height) {
 		GLApp::resize(width, height);
 		float aspectRatio = (float)width / (float)height;
@@ -16,6 +20,7 @@ struct Test : public GLApp::GLApp {
 		glLoadIdentity();
 		glFrustum(-aspectRatio * zNear, aspectRatio * zNear, -zNear, zNear, zNear, zFar);
 	}
+	
 	virtual void update() {
 		GLApp::update();
 		glMatrixMode(GL_MODELVIEW);
@@ -35,4 +40,3 @@ struct Test : public GLApp::GLApp {
 };
 
 GLAPP_MAIN(Test)
-
