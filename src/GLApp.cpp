@@ -1,18 +1,17 @@
+#include "Common/gl.h"
 #include "GLApp/GLApp.h"
 
 #include "Common/Exception.h"
 #include "Common/Finally.h"
 
-#include <iostream>
 #include <SDL2/SDL.h>	//main
-#include <OpenGL/gl.h>
+
+#include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
 
-#ifdef PLATFORM_osx
 #include <unistd.h>
-#endif
 
 //main...
 int main(int argc, char *argv[]) {

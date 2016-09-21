@@ -1,5 +1,5 @@
-#include <GLApp/GLApp.h>
-#include <OpenGL/gl.h>
+#include "Common/gl.h"
+#include "GLApp/GLApp.h"
 
 struct Test : public GLApp::GLApp {
 	float angle;
