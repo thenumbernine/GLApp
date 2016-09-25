@@ -1,0 +1,13 @@
+distName='GLApp'
+distType='lib'
+depends:append{'../Common'}
+function depend(cwd)
+	if platform == 'linux' then 
+		dynamicLibs:append{
+			'/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so',
+			'/usr/lib/x86_64-linux-gnu/libGL.so',
+			'/usr/lib/x86_64-linux-gnu/libGLU.so',
+		}
+	end
+	if platform == 'osx' then linkFlags = linkFlags .. ' -framework Cocoa -framework OpenGL' end
+end
