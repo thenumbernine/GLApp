@@ -4,19 +4,31 @@
 #include "Common/Exception.h"
 #include "Common/Finally.h"
 
-#include <SDL2/SDL.h>	//main
+#include "SDL.h"	//main
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
 
+#ifndef PLATFORM_msvc
 #include <unistd.h>
+#endif
 
-//main...
+//SDL_main...
 int main(int argc, char *argv[]) {
 	std::vector<std::string> args;
+
+//why can't msvc find back_inserter?
+#ifdef PLATFORM_msvc
+	for (int i = 0; i < argc; ++i) {
+		args.push_back(argv[i]);
+	}
+#else
 	std::copy(argv, argv+argc, std::back_inserter<std::vector<std::string>>(args));
+#endif
+
+//fix the fact that osx doesn't know where it is being run from
 #ifdef PLATFORM_osx
 	if (args.size() == 0) throw Common::Exception() << "expected arg for the exe path";
 	std::string exe = args[0];
@@ -141,4 +153,3 @@ void GLApp::shutdown() {
 }
 
 };
-

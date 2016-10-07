@@ -1,13 +1,18 @@
 distName='GLApp'
 distType='lib'
 depends:append{'../Common'}
-function depend(cwd)
-	if platform == 'linux' then 
-		dynamicLibs:append{
-			'/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so',
-			'/usr/lib/x86_64-linux-gnu/libGL.so',
-			'/usr/lib/x86_64-linux-gnu/libGLU.so',
-		}
+if platform == 'msvc' then
+	include:insert(cwd..'/../SDL2-2.0.4-win32/include')
+	dynamicLibs:insert'opengl32.lib'
+	dynamicLibs:insert(cwd..'/../SDL2-2.0.4-win32/lib/x64/SDL2.lib')
+	dynamicLibs:insert(cwd..'/../SDL2-2.0.4-win32/lib/x64/SDL2main.lib')
+end
+if platform == 'linux' then 
+	include:insert'/usr/include/SDL2'
+	libs:append{'SDL2-2.0', 'GL', 'GLU'}
+end
+if including then
+	if platform == 'osx' then 
+		linkFlags = linkFlags .. ' -framework Cocoa -framework OpenGL' 
 	end
-	if platform == 'osx' then linkFlags = linkFlags .. ' -framework Cocoa -framework OpenGL' end
 end
