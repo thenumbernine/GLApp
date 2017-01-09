@@ -11,8 +11,13 @@
 #include <vector>
 #include <algorithm>
 
-#ifndef PLATFORM_msvc
+#if !defined(PLATFORM_msvc)
 #include <unistd.h>
+#endif
+
+//all just for the chdir ...
+#if defined(PLATFORM_linux)
+#include <linux/limits.h>	//PATH_MAX
 #endif
 
 //SDL_main...
@@ -34,8 +39,28 @@ int main(int argc, char *argv[]) {
 	std::string exe = args[0];
 	exe = exe.substr(0, exe.find_last_of('/'));
 	exe = exe.substr(0, exe.find_last_of('/')) + "/Resources";
-	chdir(exe.c_str());
+	if (chdir(exe.c_str())) {
+		throw Common::Exception() << "chdir failed with error " << errno;
+	}
 #endif
+	
+//you know, no guarantees for Linux either
+//https://stackoverflow.com/questions/4025370/can-an-executable-discover-its-own-path-linux
+#ifdef PLATFORM_linux
+	pid_t pid = getpid();
+	std::string path = "/proc/" + std::to_string(pid) + "/exe";
+
+	std::vector<char> dest(PATH_MAX+1, 0);// readlink does not null terminate!
+	if (readlink(path.c_str(), dest.data(), PATH_MAX) == -1) {
+		throw Common::Exception() << "readlink failed to find the current path"; 
+	}
+	std::string deststr(dest.begin(), dest.end());
+	deststr = deststr.substr(0, deststr.find_last_of('/'));
+	if (chdir(deststr.c_str())) {
+		throw Common::Exception() << "chdir failed with error " << errno;
+	}
+#endif
+	
 	return ::GLApp::GLApp::mainApp()->main(args);
 }
 
