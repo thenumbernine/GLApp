@@ -15,7 +15,7 @@ if platform == 'osx' then
 	linkFlags = linkFlags .. ' -framework Cocoa -framework OpenGL' 
 	--dynamic
 	include:insert(os.getenv'HOME'..'/include/SDL2')
-	dynamicLibs:insert(os.getenv'HOME'..'/lib/libSDL2.dylib')
+	dynamicLibs:insert(os.getenv'HOME'..'/lib/libSDL2-2.0.0.dylib')
 	--static
 	--libpaths:insert(os.getenv'HOME'..'/lib')
 	--libs:insert'SDL2main'
