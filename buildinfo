@@ -11,8 +11,12 @@ if platform == 'linux' then
 	include:insert'/usr/include/SDL2'
 	libs:append{'SDL2-2.0', 'GL', 'GLU'}
 end
-if including then
-	if platform == 'osx' then 
-		linkFlags = linkFlags .. ' -framework Cocoa -framework OpenGL' 
-	end
+if platform == 'osx' then
+	linkFlags = linkFlags .. ' -framework Cocoa -framework OpenGL' 
+	--dynamic
+	include:insert(os.getenv'HOME'..'/include/SDL2')
+	dynamicLibs:insert(os.getenv'HOME'..'/lib/libSDL2.dylib')
+	--static
+	--libpaths:insert(os.getenv'HOME'..'/lib')
+	--libs:insert'SDL2main'
 end
