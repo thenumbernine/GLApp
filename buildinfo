@@ -2,10 +2,9 @@ distName='GLApp'
 distType='lib'
 depends:append{'../Common'}
 if platform == 'msvc' then
-	include:insert(cwd..'/../SDL2-2.0.4-win32/include')
 	dynamicLibs:insert'opengl32.lib'
-	dynamicLibs:insert(cwd..'/../SDL2-2.0.4-win32/lib/x64/SDL2.lib')
-	dynamicLibs:insert(cwd..'/../SDL2-2.0.4-win32/lib/x64/SDL2main.lib')
+	dynamicLibs:insert(os.getenv'USERPROFILE'..'\\lib\\x64\\SDL2.lib')
+	dynamicLibs:insert(os.getenv'USERPROFILE'..'\\lib\\x64\\SDL2main.lib')
 end
 if platform == 'linux' then 
 	include:insert'/usr/include/SDL2'
