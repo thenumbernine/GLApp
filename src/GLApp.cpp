@@ -11,7 +11,7 @@
 #include <vector>
 #include <algorithm>
 
-#if !defined(PLATFORM_msvc)
+#if !defined(PLATFORM_msvc) && !defined(PLATFORM_clang_win)
 #include <unistd.h>
 #endif
 
