@@ -20,7 +20,7 @@ public:
 	the external program's subclass of GLApp will implement this to return an instance of itself
 	 (using the GLAPP_MAIN macro)
 	*/
-	static GLApp *mainApp();
+	static GLApp* mainApp();
 
 	GLApp();
 
