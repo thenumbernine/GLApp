@@ -2,7 +2,9 @@ distName='GLApp'
 distType='lib'
 depends:append{'../Common'}
 
-if platform == 'msvc' then
+if platform == 'msvc' 
+or platform == 'clang_win' 
+then
 	dynamicLibs:insert'opengl32.lib'
 	--libs:insert'opengl32'
 	--libpaths:insert('"'..home..[[\lib\x64"]])
@@ -10,19 +12,6 @@ if platform == 'msvc' then
 	--libs:insert'SDL2main.lib'
 	local SDLDir = home..[[\Projects\other\SDL2-devel-2.0.8-VC]]
 	local SDLLibDir = SDLDir .. [[\lib\x64]]
-	dynamicLibs:insert(SDLLibDir..[[\SDL2.lib]])
-	dynamicLibs:insert(SDLLibDir..[[\SDL2main.lib]])
-end
-
-if platform == 'clang_win' 
-then
-	local envlib = os.getenv'LIB'
-		:split';'
-		:filter(function(l) return #l > 0 end)
-	local msvclib = envlib[#envlib]
-	--libpaths:append(envlib)
-	dynamicLibs:insert('"'..msvclib..[[\opengl32.lib"]])
-	local SDLLibDir = home..[[\Projects\other\SDL2-devel-2.0.8-VC\lib\x64]]
 	dynamicLibs:insert(SDLLibDir..[[\SDL2.lib]])
 	dynamicLibs:insert(SDLLibDir..[[\SDL2main.lib]])
 end
