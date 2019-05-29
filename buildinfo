@@ -6,19 +6,15 @@ if platform == 'msvc'
 or platform == 'clang_win' 
 then
 	dynamicLibs:insert'opengl32.lib'
-	--libs:insert'opengl32'
-	--libpaths:insert('"'..home..[[\lib\x64"]])
-	--libs:insert'SDL2.lib'
-	--libs:insert'SDL2main.lib'
-	local SDLDir = home..[[\Projects\other\SDL2-devel-2.0.8-VC]]
+	local SDLDir = assert(os.getenv'SDL2_DIR', "make sure you define the environment variable SDL2_DIR")
 	local SDLLibDir = SDLDir .. [[\lib\x64]]
 	dynamicLibs:insert(SDLLibDir..[[\SDL2.lib]])
 	dynamicLibs:insert(SDLLibDir..[[\SDL2main.lib]])
+	include:insert(SDLDir..[[\include]])
 end
 
 if platform == 'mingw' then
-	--local SDLLibDir = home..[[\Projects\other\SDL2-devel-2.0.8-mingw]]
-	local SDLLibDir = home..[[\Projects\other\SDL2-devel-2.0.8-mingw\i686-w64-mingw32\lib]]
+	local SDLLibDir = os.getenv'SDL2_DIR'..[[\i686-w64-mingw32\lib]]
 	libpaths:insert(SDLLibDir) 
 	libs:append{'opengl32', 'SDL2main', 'SDL2'}
 end
