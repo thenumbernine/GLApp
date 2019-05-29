@@ -1,4 +1,4 @@
-#include "Common/gl.h"
+#include "GLApp/gl.h"
 #include "GLApp/GLApp.h"
 
 #include "Common/Exception.h"
@@ -23,15 +23,7 @@
 //SDL_main...
 int main(int argc, char *argv[]) {
 	std::vector<std::string> args;
-
-//why can't msvc find back_inserter?
-#ifdef PLATFORM_msvc
-	for (int i = 0; i < argc; ++i) {
-		args.push_back(argv[i]);
-	}
-#else
 	std::copy(argv, argv+argc, std::back_inserter<std::vector<std::string>>(args));
-#endif
 
 //fix the fact that osx doesn't know where it is being run from
 #ifdef PLATFORM_osx
@@ -99,6 +91,13 @@ int GLApp::main(const std::vector<std::string>& args) {
 	context = SDL_GL_CreateContext(window);
 	if (!context) throw Common::Exception() << "failed to create GL context";
 	Common::Finally sdlGlContextFinally([&](){ SDL_GL_DeleteContext(context); });
+
+#if defined(PLATFORM_msvc)
+	{
+		GLenum err = glewInit();
+		if (err != GLEW_OK) throw Common::Exception() << "GLEW failed to initialize with error " << glewGetErrorString(err); 
+	}
+#endif
 
 	SDL_GL_SetSwapInterval(0);
 

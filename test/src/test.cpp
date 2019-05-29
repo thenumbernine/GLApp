@@ -1,4 +1,4 @@
-#include "Common/gl.h"
+#include "GLApp/gl.h"
 #include "GLApp/GLApp.h"
 
 struct Test : public GLApp::GLApp {
