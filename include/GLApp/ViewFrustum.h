@@ -11,7 +11,7 @@ struct GLApp;
 struct ViewFrustum : public View {
 	using Super = View;
 
-protected:	
+public:	//protected:
 	Tensor::Vector<float,3> pos;
 	Tensor::Quat<float> angle;
 	float dist;
