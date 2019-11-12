@@ -13,7 +13,11 @@ struct View {
 	View(::GLApp::GLApp* app_) 
 	: app(app_)
 	{}
-	
+
+	virtual void setup() {
+		setupProjection();
+		setupModelview();
+	}
 	virtual void setupProjection() {}
 	virtual void setupModelview() {}
 	virtual void mousePan(int dx, int dy) {}

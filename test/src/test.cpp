@@ -1,31 +1,32 @@
 #include "GLApp/gl.h"
 #include "GLApp/GLApp.h"
+#include "GLApp/ViewBehavior.h"
 
-struct Test : public ::GLApp::GLApp {
-	using Super = ::GLApp::GLApp;
-	float angle;
+#include <chrono>
+
+struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
+	using Super = ::GLApp::ViewBehavior<::GLApp::GLApp>;
+
+	using Clock = std::chrono::high_resolution_clock;
+	std::chrono::time_point<Clock> lastTime = Clock::now();
+
+	float angle = 0;
 	
-	Test() : GLApp(), angle(0.) {}
+	Test() : Super() {}
 	
 	virtual void init() {
 		GLApp::init();
 		glClearColor(.5, .75, .75, 1.);
-	}
-	
-	virtual void onResize() {
-		Super::onResize();
-		float zNear = .1f;
-		float zFar = 100.f;
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glFrustum(-aspectRatio * zNear, aspectRatio * zNear, -zNear, zNear, zNear, zFar);
+		viewFrustum->dist = 3.;
 	}
 	
 	virtual void update() {
-		GLApp::update();
+		std::chrono::time_point<Clock> thisTime = Clock::now();
+		float deltaTime = 1e-9 * (double)std::chrono::duration_cast<std::chrono::nanoseconds>(thisTime - lastTime).count();
+		lastTime = thisTime;
+		
+		Super::update();
 		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glTranslatef(0.f, 0.f, -2.f);
 		glRotatef(angle,0.f,1.f,0.f);
 		glBegin(GL_TRIANGLES);
 		glColor3f(1.f,0.f,0.f);
@@ -35,7 +36,7 @@ struct Test : public ::GLApp::GLApp {
 		glColor3f(0.f,0.f,1.f);
 		glVertex3f(1.f,-.75f,0.f);
 		glEnd();
-		++angle;
+		angle += deltaTime * 360 * 10;	//10 revolutions per second
 	}
 };
 

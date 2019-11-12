@@ -11,8 +11,8 @@ ViewFrustum::ViewFrustum(::GLApp::GLApp* app_)
 }
 
 void ViewFrustum::setupProjection() {
-	float zFar = 10.;
-	float zNear = .001;
+	float zFar = 100.;
+	float zNear = .01;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glFrustum(-app->getAspectRatio() * zNear, app->getAspectRatio() * zNear, -zNear, zNear, zNear, zFar);
