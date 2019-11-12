@@ -59,7 +59,9 @@ int main(int argc, char *argv[]) {
 namespace GLApp {
 
 GLApp::GLApp()
-: window(nullptr)
+: screenSize(640, 480)
+, aspectRatio((float)screenSize(0) / (float)screenSize(1))
+, window(nullptr)
 , context(SDL_GLContext())
 , swap(true)
 {}
@@ -73,10 +75,7 @@ int GLApp::main(const std::vector<std::string>& args) {
 	if (sdlInitError) throw Common::Exception() << "SDL_Init failed with error code " << sdlInitError;
 
 	Common::Finally sdlFinally([&](){ SDL_Quit(); });
-		
-	int width = 640;
-	int height = 480;
-
+	
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -84,7 +83,7 @@ int GLApp::main(const std::vector<std::string>& args) {
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenSize(0), screenSize(1), SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
 	if (!window) throw Common::Exception() << "failed to create window";
 	Common::Finally sdlWindowFinally([&](){ SDL_DestroyWindow(window); });
 
@@ -102,7 +101,7 @@ int GLApp::main(const std::vector<std::string>& args) {
 	SDL_GL_SetSwapInterval(0);
 
 	init();
-	resize(width, height);
+	onResize();
 
 	SDL_Event event;
 	do {
@@ -114,9 +113,10 @@ int GLApp::main(const std::vector<std::string>& args) {
 			case SDL_WINDOWEVENT:
 				switch (event.window.event) {
 				case SDL_WINDOWEVENT_RESIZED:
-					width = event.window.data1;
-					height = event.window.data2;
-					resize(width, height);
+					screenSize(0) = event.window.data1;
+					screenSize(1) = event.window.data2;
+					aspectRatio = (float)screenSize(0) / (float)screenSize(1);
+					onResize();
 					break;
 				}
 				break;
@@ -161,9 +161,9 @@ int GLApp::getSDLInitFlags() {
 void GLApp::init() {
 }
 
-void GLApp::resize(int width, int height) {
-	SDL_SetWindowSize(window, width, height);
-	glViewport(0, 0, width, height);
+void GLApp::onResize() {
+	SDL_SetWindowSize(window, screenSize(0), screenSize(1));
+	glViewport(0, 0, screenSize(0), screenSize(1));
 }
 
 void GLApp::sdlEvent(SDL_Event& event) {
@@ -176,4 +176,4 @@ void GLApp::update() {
 void GLApp::shutdown() {
 }
 
-};
+}

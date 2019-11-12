@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Tensor/Vector.h"
+
 #include "SDL.h"
 #include <stdlib.h>	//NULL
 #include <vector>
@@ -10,6 +12,8 @@ namespace GLApp {
 class GLApp {
 protected:
 	bool done;
+	Tensor::Vector<int,2> screenSize;
+	float aspectRatio;
 	SDL_Window *window;
 	SDL_GLContext context;
 public:
@@ -29,7 +33,7 @@ public:
 	virtual void requestExit();	//request exit
 	
 	virtual void init();
-	virtual void resize(int width, int height);
+	virtual void onResize();
 	virtual void sdlEvent(SDL_Event &event);
 	virtual void update();
 	virtual void shutdown();
@@ -37,6 +41,8 @@ public:
 	//used for window construction during init()
 	virtual const char *getTitle();
 	virtual int getSDLInitFlags();
+	virtual Tensor::Vector<int,2> getScreenSize() const { return screenSize; }
+	virtual float getAspectRatio() const { return aspectRatio; }
 
 	//used for access
 	SDL_Window *getWindow() { return window; }

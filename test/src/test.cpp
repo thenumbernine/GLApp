@@ -1,7 +1,8 @@
 #include "GLApp/gl.h"
 #include "GLApp/GLApp.h"
 
-struct Test : public GLApp::GLApp {
+struct Test : public ::GLApp::GLApp {
+	using Super = ::GLApp::GLApp;
 	float angle;
 	
 	Test() : GLApp(), angle(0.) {}
@@ -11,9 +12,8 @@ struct Test : public GLApp::GLApp {
 		glClearColor(.5, .75, .75, 1.);
 	}
 	
-	virtual void resize(int width, int height) {
-		GLApp::resize(width, height);
-		float aspectRatio = (float)width / (float)height;
+	virtual void onResize() {
+		Super::onResize();
 		float zNear = .1f;
 		float zFar = 100.f;
 		glMatrixMode(GL_PROJECTION);
