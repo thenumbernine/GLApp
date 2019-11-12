@@ -1,7 +1,6 @@
 #include "GLApp/gl.h"
 #include "GLApp/GLApp.h"
 #include "GLApp/ViewBehavior.h"
-
 #include <chrono>
 
 struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
@@ -11,11 +10,11 @@ struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
 	std::chrono::time_point<Clock> lastTime = Clock::now();
 
 	float angle = 0;
-	
-	Test() : Super() {}
+
+	using Super::Super;
 	
 	virtual void init() {
-		GLApp::init();
+		Super::init();
 		glClearColor(.5, .75, .75, 1.);
 		viewFrustum->dist = 3.;
 	}
