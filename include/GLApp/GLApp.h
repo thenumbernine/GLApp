@@ -3,40 +3,46 @@
 #include "Tensor/Vector.h"
 
 #include "SDL.h"
-#include <stdlib.h>	//NULL
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace GLApp {
 
 class GLApp {
 protected:
-	bool done;
-	Tensor::Vector<int,2> screenSize;
-	float aspectRatio;
-	SDL_Window *window;
-	SDL_GLContext context;
+	bool done = {};
+	Tensor::Vector<int,2> screenSize = {640, 480};
+	float aspectRatio = (float)screenSize(0) / (float)screenSize(1);
+	SDL_Window *window = {};
+	SDL_GLContext context = {};
+	int exitCode = {};
 public:
-	bool swap;
+	bool swap = true;
 
 public:
+	//init args
+	using Init = std::vector<std::string>;
+
 	/*
 	the external program's subclass of GLApp will implement this to return an instance of itself
 	 (using the GLAPP_MAIN macro)
 	*/
-	static GLApp* mainApp();
+	static std::shared_ptr<::GLApp::GLApp> createMainApp(const Init& args);
 
-	GLApp();
+	GLApp(const Init& args);
+	virtual ~GLApp();
 
-	virtual int main(const std::vector<std::string>& args);
+	virtual void loop();
 
 	virtual void requestExit();	//request exit
-	
-	virtual void init();
+	virtual void requestExit(int code);
+
+	virtual int getExitCode() const { return exitCode; }
+
 	virtual void onResize();
-	virtual void sdlEvent(SDL_Event &event);
-	virtual void update();
-	virtual void shutdown();
+	virtual void onSDLEvent(SDL_Event &event);
+	virtual void onUpdate();
 	
 	//used for window construction during init()
 	virtual const char *getTitle();
@@ -49,11 +55,15 @@ public:
 	SDL_GLContext getGLContext() { return context; }
 };
 
-};
+}
 
+/*
+Define this somewhere to provide the function which GLApp.cpp expects in its main() for building the App object
+
+When declaring type names, when the namespace matches the class name that this is a static method within, I often have to use :: prefix to deonate the namespace is found in global scope and the class name is found in the namespace.
+However I cannot use the :: prefix on the function name, or else it will give me an error "error: ‘GLApp’ in ‘class std::shared_ptr<GLApp::GLAppASDF>’ does not name a type" (even if I keep the namespace and class names distinct, i.e. struct GLApp -> struct GLAppASDF).
+*/
 #define GLAPP_MAIN(classname)	\
-	::GLApp::GLApp *::GLApp::GLApp::mainApp() {	\
-		static classname glapp_main;	\
-		return &glapp_main;	\
+	std::shared_ptr<::GLApp::GLApp> GLApp::GLApp::createMainApp(const ::GLApp::GLApp::Init& args) {	\
+		return std::make_shared<classname>(args);	\
 	}
-

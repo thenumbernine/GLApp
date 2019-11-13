@@ -23,16 +23,16 @@ struct ViewBehavior : public Parent {
 	bool leftGuiDown = false;
 	bool rightGuiDown = false;
 
-	ViewBehavior() 
-	: Super()
+	ViewBehavior(const typename Super::Init& args)
+	: Super(args)
 	, viewFrustum(std::make_shared<::GLApp::ViewFrustum>(this))
 	, viewOrtho(std::make_shared<::GLApp::ViewOrtho>(this))
 	, view(viewFrustum)
 	{
 	}
 
-	virtual void update() {
-		Super::update();
+	virtual void onUpdate() {
+		Super::onUpdate();
 		view->setup();
 	}
 

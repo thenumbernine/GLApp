@@ -2,7 +2,6 @@
 #include "GLApp/GLApp.h"
 
 #include "Common/Exception.h"
-#include "Common/Finally.h"
 
 #include "SDL.h"	//main
 
@@ -53,28 +52,18 @@ int main(int argc, char *argv[]) {
 	}
 #endif
 	
-	return ::GLApp::GLApp::mainApp()->main(args);
+	std::shared_ptr<::GLApp::GLApp> app = ::GLApp::GLApp::createMainApp(args);
+	app->loop();
+	return app->getExitCode();
 }
 
 namespace GLApp {
 
-GLApp::GLApp()
-: screenSize(640, 480)
-, aspectRatio((float)screenSize(0) / (float)screenSize(1))
-, window(nullptr)
-, context(SDL_GLContext())
-, swap(true)
-{}
-
-int GLApp::main(const std::vector<std::string>& args) {
-	done = false;
-
+GLApp::GLApp(const Init& args) {
 //SDL init
 
 	int sdlInitError = SDL_Init(getSDLInitFlags());
 	if (sdlInitError) throw Common::Exception() << "SDL_Init failed with error code " << sdlInitError;
-
-	Common::Finally sdlFinally([&](){ SDL_Quit(); });
 	
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -85,11 +74,9 @@ int GLApp::main(const std::vector<std::string>& args) {
 
 	window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenSize(0), screenSize(1), SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
 	if (!window) throw Common::Exception() << "failed to create window";
-	Common::Finally sdlWindowFinally([&](){ SDL_DestroyWindow(window); });
 
 	context = SDL_GL_CreateContext(window);
 	if (!context) throw Common::Exception() << "failed to create GL context";
-	Common::Finally sdlGlContextFinally([&](){ SDL_GL_DeleteContext(context); });
 
 #if defined(PLATFORM_msvc)
 	{
@@ -100,9 +87,16 @@ int GLApp::main(const std::vector<std::string>& args) {
 
 	SDL_GL_SetSwapInterval(0);
 
-	init();
 	onResize();
+}
 
+GLApp::~GLApp() {
+	if (context) SDL_GL_DeleteContext(context);
+	if (window) SDL_DestroyWindow(window);
+	SDL_Quit();
+}
+
+void GLApp::loop() {
 	SDL_Event event;
 	do {
 		while (SDL_PollEvent(&event) > 0) {
@@ -133,21 +127,22 @@ int GLApp::main(const std::vector<std::string>& args) {
 #endif
 				break;
 			}
-			sdlEvent(event);
+			onSDLEvent(event);
 		}
 
-		update();
+		onUpdate();
 
 		if (swap) SDL_GL_SwapWindow(window);
 	} while (!done);
-
-	shutdown();
-
-	return 0;
 }
 
 void GLApp::requestExit() {
 	done = true;
+}
+
+void GLApp::requestExit(int code) {
+	exitCode = code;
+	requestExit();
 }
 
 const char *GLApp::getTitle() {
@@ -158,22 +153,16 @@ int GLApp::getSDLInitFlags() {
 	return SDL_INIT_VIDEO;
 }
 
-void GLApp::init() {
-}
-
 void GLApp::onResize() {
 	SDL_SetWindowSize(window, screenSize(0), screenSize(1));
 	glViewport(0, 0, screenSize(0), screenSize(1));
 }
 
-void GLApp::sdlEvent(SDL_Event& event) {
+void GLApp::onSDLEvent(SDL_Event& event) {
 }
 
-void GLApp::update() {
+void GLApp::onUpdate() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void GLApp::shutdown() {
 }
 
 }

@@ -8,7 +8,7 @@ namespace GLApp {
 struct GLApp;
 
 struct View {
-	::GLApp::GLApp* app;
+	::GLApp::GLApp* app = {};
 
 	View(::GLApp::GLApp* app_) 
 	: app(app_)
