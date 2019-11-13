@@ -16,7 +16,7 @@ struct ViewBehavior : public Parent {
 	
 	//all these flags are used by the mouse input behavior capture below
 	//TODO - put them in their own location (in libs.v2 they used to be in a 'Mouse' class)
-	//also TODO - make the sdlEvent toggle-able, or make this a object rather than a behavior
+	//also TODO - make the onSDLEvent toggle-able, or make this a object rather than a behavior
 	bool leftButtonDown = false;
 	bool leftShiftDown = false;
 	bool rightShiftDown = false;
@@ -36,7 +36,7 @@ struct ViewBehavior : public Parent {
 		view->setup();
 	}
 
-	virtual void sdlEvent(SDL_Event& event) {
+	virtual void onSDLEvent(SDL_Event& event) {
 		bool shiftDown = leftShiftDown || rightShiftDown;
 		bool guiDown = leftGuiDown || rightGuiDown;
 		

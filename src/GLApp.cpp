@@ -98,7 +98,7 @@ GLApp::~GLApp() {
 
 void GLApp::loop() {
 	SDL_Event event;
-	do {
+	while (!done) {
 		while (SDL_PollEvent(&event) > 0) {
 			switch (event.type) {
 			case SDL_QUIT:
@@ -133,7 +133,7 @@ void GLApp::loop() {
 		onUpdate();
 
 		if (swap) SDL_GL_SwapWindow(window);
-	} while (!done);
+	}
 }
 
 void GLApp::requestExit() {
