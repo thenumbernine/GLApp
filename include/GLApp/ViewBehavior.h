@@ -6,9 +6,9 @@
 
 namespace GLApp {
 
-template<typename Parent>
-struct ViewBehavior : public Parent {
-	using Super = Parent;
+template<typename Super_>
+struct ViewBehavior : public Super_ {
+	using Super = Super_;
 	
 	std::shared_ptr<::GLApp::ViewFrustum> viewFrustum;
 	std::shared_ptr<::GLApp::ViewOrtho> viewOrtho;
@@ -23,9 +23,8 @@ struct ViewBehavior : public Parent {
 	bool leftGuiDown = false;
 	bool rightGuiDown = false;
 
-	ViewBehavior(const typename Super::Init& args)
-	: Super(args)
-	, viewFrustum(std::make_shared<::GLApp::ViewFrustum>(this))
+	ViewBehavior()
+	: viewFrustum(std::make_shared<::GLApp::ViewFrustum>(this))
 	, viewOrtho(std::make_shared<::GLApp::ViewOrtho>(this))
 	, view(viewFrustum)
 	{

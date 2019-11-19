@@ -33,8 +33,12 @@ void ViewOrtho::mousePan(int dx, int dy) {
 }
 
 void ViewOrtho::mouseZoom(int dx, int dy) {
+#if 0	//zoom separate
 	zoom(0) *= exp(-dx * -.03);
 	zoom(1) *= exp(dy * -.03);
+#else	//zoom together
+	zoom *= exp(dy * -.03);
+#endif
 }
 
 }

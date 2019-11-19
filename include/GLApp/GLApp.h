@@ -28,9 +28,10 @@ public:
 	the external program's subclass of GLApp will implement this to return an instance of itself
 	 (using the GLAPP_MAIN macro)
 	*/
-	static std::shared_ptr<::GLApp::GLApp> createMainApp(const Init& args);
+	static std::shared_ptr<::GLApp::GLApp> createMainApp();
 
-	GLApp(const Init& args);
+	//vtable isn't set up yet so don't pass args into GLApp via ctor
+	virtual void init(const Init& args);
 	virtual ~GLApp();
 
 	virtual void loop();
@@ -64,6 +65,6 @@ When declaring type names, when the namespace matches the class name that this i
 However I cannot use the :: prefix on the function name, or else it will give me an error "error: ‘GLApp’ in ‘class std::shared_ptr<GLApp::GLAppASDF>’ does not name a type" (even if I keep the namespace and class names distinct, i.e. struct GLApp -> struct GLAppASDF).
 */
 #define GLAPP_MAIN(classname)	\
-	std::shared_ptr<::GLApp::GLApp> GLApp::GLApp::createMainApp(const ::GLApp::GLApp::Init& args) {	\
-		return std::make_shared<classname>(args);	\
+	std::shared_ptr<::GLApp::GLApp> GLApp::GLApp::createMainApp() {\
+		return std::dynamic_pointer_cast<::GLApp::GLApp>(std::make_shared<classname>());\
 	}

@@ -52,14 +52,15 @@ int main(int argc, char *argv[]) {
 	}
 #endif
 	
-	std::shared_ptr<::GLApp::GLApp> app = ::GLApp::GLApp::createMainApp(args);
+	std::shared_ptr<::GLApp::GLApp> app = ::GLApp::GLApp::createMainApp();
+	app->init(args);
 	app->loop();
 	return app->getExitCode();
 }
 
 namespace GLApp {
 
-GLApp::GLApp(const Init& args) {
+void GLApp::init(const Init& args) {
 //SDL init
 
 	int sdlInitError = SDL_Init(getSDLInitFlags());

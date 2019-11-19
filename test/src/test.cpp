@@ -2,6 +2,7 @@
 #include "GLApp/GLApp.h"
 #include "GLApp/ViewBehavior.h"
 #include <chrono>
+#include <iostream>
 
 struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
 	using Super = ::GLApp::ViewBehavior<::GLApp::GLApp>;
@@ -11,7 +12,10 @@ struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
 
 	float angle = 0;
 
-	Test(const Init& args) : Super(args) {
+	virtual const char* getTitle() { return "Test"; }
+
+	virtual void init(const Init& args) {
+		Super::init(args);
 		glClearColor(.5, .75, .75, 1.);
 		viewFrustum->dist = 3.;
 	}
