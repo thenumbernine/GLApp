@@ -18,6 +18,7 @@ struct ViewBehavior : public Super_ {
 	//TODO - put them in their own location (in libs.v2 they used to be in a 'Mouse' class)
 	//also TODO - make the onSDLEvent toggle-able, or make this a object rather than a behavior
 	bool leftButtonDown = false;
+	bool rightButtonDown = false;
 	bool leftShiftDown = false;
 	bool rightShiftDown = false;
 	bool leftGuiDown = false;
@@ -58,11 +59,15 @@ struct ViewBehavior : public Super_ {
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				leftButtonDown = true;
+			} else if (event.button.button == SDL_BUTTON_RIGHT) {
+				rightButtonDown = true;
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				leftButtonDown = false;
+			} else if (event.button.button == SDL_BUTTON_RIGHT) {
+				rightButtonDown = false;
 			}
 			break;
 		case SDL_KEYDOWN:
