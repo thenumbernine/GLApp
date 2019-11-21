@@ -10,12 +10,12 @@
 #include <vector>
 #include <algorithm>
 
-#if !defined(PLATFORM_msvc) && !defined(PLATFORM_clang_win)
+#if !PLATFORM_MSVC && !PLATFORM_CLANG_WIN
 #include <unistd.h>
 #endif
 
 //all just for the chdir ...
-#if defined(PLATFORM_linux)
+#if PLATFORM_LINUX
 #include <linux/limits.h>	//PATH_MAX
 #endif
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	std::copy(argv, argv+argc, std::back_inserter<std::vector<std::string>>(args));
 
 //fix the fact that osx doesn't know where it is being run from
-#ifdef PLATFORM_osx
+#if PLATFORM_OSX
 	if (args.size() == 0) throw Common::Exception() << "expected arg for the exe path";
 	std::string exe = args[0];
 	exe = exe.substr(0, exe.find_last_of('/'));
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 	
 //you know, no guarantees for Linux either
 //https://stackoverflow.com/questions/4025370/can-an-executable-discover-its-own-path-linux
-#ifdef PLATFORM_linux
+#if PLATFORM_LINUX
 	pid_t pid = getpid();
 	std::string path = "/proc/" + std::to_string(pid) + "/exe";
 
@@ -79,7 +79,7 @@ void GLApp::init(const Init& args) {
 	context = SDL_GL_CreateContext(window);
 	if (!context) throw Common::Exception() << "failed to create GL context";
 
-#if defined(PLATFORM_msvc)
+#if PLATFORM_MSVC
 	{
 		GLenum err = glewInit();
 		if (err != GLEW_OK) throw Common::Exception() << "GLEW failed to initialize with error " << glewGetErrorString(err); 
@@ -116,12 +116,12 @@ void GLApp::loop() {
 				}
 				break;
 			case SDL_KEYDOWN:
-#if PLATFORM_windows
+#if PLATFORM_WINDOWS
 					if (event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) != 0) {
 						done = true;
 					}
 #endif
-#if PLATFORM_osx
+#if PLATFORM_OSX
 					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_GUI) != 0) {
 						done = true;
 					}
