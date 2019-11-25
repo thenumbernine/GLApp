@@ -32,8 +32,7 @@ void ViewFrustum::mousePan(int dx, int dy) {
 	float fdx = (float)dx / magn;
 	float fdy = (float)dy / magn;
 	Tensor::Quat<float> rotation = Tensor::Quat<float>(fdy, fdx, 0, magn * M_PI / 180.).fromAngleAxis();
-	angle = rotation * angle;
-	angle /= Tensor::Quat<float>::length(angle);
+	angle = (rotation * angle).unit();
 }
 
 void ViewFrustum::mouseZoom(int dx, int dy) {
