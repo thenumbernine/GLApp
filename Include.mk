@@ -2,6 +2,9 @@
 GLAPP_PATH:=$(dir $(lastword $(MAKEFILE_LIST)))
 
 INCLUDE+=$(GLAPP_PATH)/include
+
+# this is in common with Makefile:
+
 DYNAMIC_LIBS+=$(GLAPP_PATH)dist/$(PLATFORM)/$(BUILD)/libGLApp$(LIB_SUFFIX)
 DYNAMIC_LIBS_osx+=$(HOME)/lib/libSDL2-2.0.0$(LIB_SUFFIX)
 LIBS_linux+=GL SDL2
