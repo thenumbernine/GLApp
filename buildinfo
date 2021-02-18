@@ -5,12 +5,15 @@ depends:append{'../Common', '../Tensor'}
 if platform == 'msvc' 
 or platform == 'clang_win' 
 then
-	dynamicLibs:append{'opengl32.lib', home..[[\bin\x64\glew32.lib]]}
+	dynamicLibs:append{'opengl32.lib', home..[[\lib\x64\glew32.lib]]}
 	local SDLDir = assert(os.getenv'SDL2_DIR', "make sure you define the environment variable SDL2_DIR")
 	local SDLLibDir = SDLDir .. [[\lib\x64]]
 	dynamicLibs:insert(SDLLibDir..[[\SDL2.lib]])
 	dynamicLibs:insert(SDLLibDir..[[\SDL2main.lib]])
-	include:insert(SDLDir..[[\include]])
+	include:insert(os.getenv'SDL2_INCLUDE_DIR' or SDLDir..[[\include]])
+
+	-- SDL2main.lib now needs this:
+	libs:insert'shell32.lib'
 end
 
 if platform == 'mingw' then
