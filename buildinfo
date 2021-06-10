@@ -6,11 +6,15 @@ if platform == 'msvc'
 or platform == 'clang_win' 
 then
 	dynamicLibs:append{'opengl32.lib', home..[[\lib\x64\glew32.lib]]}
-	local SDLDir = assert(os.getenv'SDL2_DIR', "make sure you define the environment variable SDL2_DIR")
-	local SDLLibDir = SDLDir .. [[\lib\x64]]
+	local SDLDir = os.getenv'SDL2_DIR'
+	local SDLLibDir = os.getenv'SDL2_LIB_DIR'
+	local SDLIncDir = os.getenv'SDL2_INCLUDE_DIR'
+	assert(SDLDir or (SDLLibDir and SDLIncDir), "make sure you define the environment variable SDL2_DIR or SDL2_INCLUDE_DIR")
+	SDLLibDir = SDLLibDir or SDLDir .. [[\lib\x64]]
+	SDLIncDir = SDLIncDir or SDLDir..[[\include]]
 	dynamicLibs:insert(SDLLibDir..[[\SDL2.lib]])
 	dynamicLibs:insert(SDLLibDir..[[\SDL2main.lib]])
-	include:insert(os.getenv'SDL2_INCLUDE_DIR' or SDLDir..[[\include]])
+	include:insert(SDLIncDir)
 
 	-- SDL2main.lib now needs this:
 	libs:insert'shell32.lib'
