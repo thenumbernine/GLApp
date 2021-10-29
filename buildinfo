@@ -24,15 +24,15 @@ then
 	libs:insert'shell32.lib'
 end
 
+-- alright, how many more platforms can I replace with this?
+if platform == 'linux' then 
+	env:addPackages('sdl2', 'glu')
+end
+
 if platform == 'mingw' then
 	local SDLLibDir = os.getenv'SDL2_DIR'..[[\i686-w64-mingw32\lib]]
 	libpaths:insert(SDLLibDir) 
 	libs:append{'opengl32', 'SDL2main', 'SDL2'}
-end
-
-if platform == 'linux' then 
-	include:insert'/usr/include/SDL2'
-	libs:append{'SDL2-2.0', 'GL', 'GLU'}
 end
 
 if platform == 'osx' then
