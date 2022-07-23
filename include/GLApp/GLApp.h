@@ -9,7 +9,7 @@
 
 namespace GLApp {
 
-class GLApp {
+struct GLApp {
 protected:
 	bool done = {};
 	Tensor::Vector<int,2> screenSize = {640, 480};

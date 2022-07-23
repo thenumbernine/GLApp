@@ -16,6 +16,7 @@ public:	//protected:
 
 public:
 	ViewOrtho(::GLApp::GLApp* app_);
+	virtual ~ViewOrtho() {}
 
 	virtual void setupProjection();
 	virtual void setupModelview();

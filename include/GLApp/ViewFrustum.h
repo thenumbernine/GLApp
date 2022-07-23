@@ -18,6 +18,7 @@ public:	//protected:
 
 public:
 	ViewFrustum(::GLApp::GLApp* app_);
+	virtual ~ViewFrustum() {}
 
 	virtual void setupProjection();
 	virtual void setupModelview();
