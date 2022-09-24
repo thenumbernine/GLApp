@@ -12,11 +12,13 @@ struct ViewOrtho : public View {
 
 public:	//protected:	
 	Tensor::Vector<float,2> pos;
-	Tensor::Vector<float,2> zoom;
+	Tensor::Vector<float,2> zoom = {1,1};
+	
+	float zFar = -1;
+	float zNear = 1;
 
 public:
-	ViewOrtho(::GLApp::GLApp* app_);
-	virtual ~ViewOrtho() {}
+	using Super::Super;
 
 	virtual void setupProjection();
 	virtual void setupModelview();

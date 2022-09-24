@@ -14,11 +14,15 @@ struct ViewFrustum : public View {
 public:	//protected:
 	Tensor::Vector<float,3> pos;
 	Tensor::Quat<float> angle;
-	float dist;
+	
+	float zFar = 100;
+	float zNear = .01f;
+	
+	//TODO this is really a viewOrbit variable
+	float dist = 1.;
 
 public:
-	ViewFrustum(::GLApp::GLApp* app_);
-	virtual ~ViewFrustum() {}
+	using Super::Super;
 
 	virtual void setupProjection();
 	virtual void setupModelview();

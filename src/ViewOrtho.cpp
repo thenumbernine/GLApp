@@ -4,12 +4,6 @@
 
 namespace GLApp {
 
-ViewOrtho::ViewOrtho(::GLApp::GLApp* app_)
-: Super(app_)
-, zoom(1,1)
-{
-}
-
 void ViewOrtho::setupProjection() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -17,7 +11,7 @@ void ViewOrtho::setupProjection() {
 		pos(0) - app->getAspectRatio() * .5 / zoom(0), 
 		pos(0) + app->getAspectRatio() * .5 / zoom(0),
 		pos(1) - .5 / zoom(1),
-		pos(1) + .5 / zoom(1), -1., 1.);
+		pos(1) + .5 / zoom(1), zNear, zFar);
 }
 
 void ViewOrtho::setupModelview() {

@@ -39,7 +39,7 @@ public:
 	virtual void requestExit();	//request exit
 	virtual void requestExit(int code);
 
-	virtual int getExitCode() const { return exitCode; }
+	virtual int getExitCode() const;
 
 	virtual void onResize();
 	virtual void onSDLEvent(SDL_Event &event);
@@ -48,8 +48,9 @@ public:
 	//used for window construction during init()
 	virtual const char *getTitle();
 	virtual int getSDLInitFlags();
-	virtual Tensor::Vector<int,2> getScreenSize() const { return screenSize; }
-	virtual float getAspectRatio() const { return aspectRatio; }
+	
+	virtual Tensor::Vector<int,2> getScreenSize() const;
+	virtual float getAspectRatio() const;
 
 	//used for access
 	SDL_Window *getWindow() { return window; }

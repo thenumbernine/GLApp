@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 
 	std::vector<char> dest(PATH_MAX+1, 0);// readlink does not null terminate!
 	if (readlink(path.c_str(), dest.data(), PATH_MAX) == -1) {
-		throw Common::Exception() << "readlink failed to find the current path"; 
+		throw Common::Exception() << "readlink failed to find the current path";
 	}
 	std::string deststr(dest.begin(), dest.end());
 	deststr = deststr.substr(0, deststr.find_last_of('/'));
@@ -82,7 +82,7 @@ void GLApp::init(const Init& args) {
 #if PLATFORM_MSVC
 	{
 		GLenum err = glewInit();
-		if (err != GLEW_OK) throw Common::Exception() << "GLEW failed to initialize with error " << glewGetErrorString(err); 
+		if (err != GLEW_OK) throw Common::Exception() << "GLEW failed to initialize with error " << glewGetErrorString(err);
 	}
 #endif
 
@@ -164,6 +164,19 @@ void GLApp::onSDLEvent(SDL_Event& event) {
 
 void GLApp::onUpdate() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+//should these be virtual?  should they be inline?
+int GLApp::getExitCode() const {
+	return exitCode;
+}
+	
+Tensor::Vector<int,2> GLApp::getScreenSize() const {
+	return screenSize;
+}
+
+float GLApp::getAspectRatio() const {
+	return aspectRatio;
 }
 
 }

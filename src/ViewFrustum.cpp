@@ -4,15 +4,7 @@
 
 namespace GLApp {
 
-ViewFrustum::ViewFrustum(::GLApp::GLApp* app_)
-: Super(app_)
-, dist(1.f)
-{
-}
-
 void ViewFrustum::setupProjection() {
-	float zFar = 100.;
-	float zNear = .01;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glFrustum(-app->getAspectRatio() * zNear, app->getAspectRatio() * zNear, -zNear, zNear, zNear, zFar);
