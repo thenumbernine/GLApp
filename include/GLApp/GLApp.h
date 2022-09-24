@@ -12,7 +12,7 @@ namespace GLApp {
 struct GLApp {
 protected:
 	bool done = {};
-	Tensor::Vector<int,2> screenSize = {640, 480};
+	Tensor::int2 screenSize = {640, 480};
 	float aspectRatio = (float)screenSize(0) / (float)screenSize(1);
 	SDL_Window *window = {};
 	SDL_GLContext context = {};
@@ -49,7 +49,7 @@ public:
 	virtual const char *getTitle();
 	virtual int getSDLInitFlags();
 	
-	virtual Tensor::Vector<int,2> getScreenSize() const;
+	virtual Tensor::int2 getScreenSize() const;
 	virtual float getAspectRatio() const;
 
 	//used for access

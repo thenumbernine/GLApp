@@ -171,7 +171,7 @@ int GLApp::getExitCode() const {
 	return exitCode;
 }
 	
-Tensor::Vector<int,2> GLApp::getScreenSize() const {
+Tensor::int2 GLApp::getScreenSize() const {
 	return screenSize;
 }
 

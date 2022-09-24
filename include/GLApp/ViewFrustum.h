@@ -12,7 +12,7 @@ struct ViewFrustum : public View {
 	using Super = View;
 
 public:	//protected:
-	Tensor::Vector<float,3> pos;
+	Tensor::float3 pos;
 	Tensor::Quat<float> angle;
 	
 	float zFar = 100;

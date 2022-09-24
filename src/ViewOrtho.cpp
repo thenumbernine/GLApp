@@ -20,7 +20,7 @@ void ViewOrtho::setupModelview() {
 }
 
 void ViewOrtho::mousePan(int dx, int dy) {
-	pos += Tensor::Vector<float,2>(
+	pos += Tensor::float2(
 		-(float)dx * app->getAspectRatio() / (float)app->getScreenSize()(0),
 		(float)dy / (float)app->getScreenSize()(1)
 	) / zoom;

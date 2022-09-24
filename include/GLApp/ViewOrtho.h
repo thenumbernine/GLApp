@@ -11,8 +11,8 @@ struct ViewOrtho : public View {
 	using Super = View;
 
 public:	//protected:	
-	Tensor::Vector<float,2> pos;
-	Tensor::Vector<float,2> zoom = {1,1};
+	Tensor::float2 pos;
+	Tensor::float2 zoom = {1,1};
 	
 	float zFar = -1;
 	float zNear = 1;
