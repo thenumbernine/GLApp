@@ -64,7 +64,9 @@ Define this somewhere to provide the function which GLApp.cpp expects in its mai
 When declaring type names, when the namespace matches the class name that this is a static method within, I often have to use :: prefix to deonate the namespace is found in global scope and the class name is found in the namespace.
 However I cannot use the :: prefix on the function name, or else it will give me an error "error: ‘GLApp’ in ‘class std::shared_ptr<GLApp::GLAppASDF>’ does not name a type" (even if I keep the namespace and class names distinct, i.e. struct GLApp -> struct GLAppASDF).
 */
-#define GLAPP_MAIN(classname)	\
+#define GLAPP_MAIN(classname)\
+namespace GLApp {\
 	std::shared_ptr<::GLApp::GLApp> GLApp::GLApp::createMainApp() {\
 		return std::dynamic_pointer_cast<::GLApp::GLApp>(std::make_shared<classname>());\
-	}
+	}\
+}
