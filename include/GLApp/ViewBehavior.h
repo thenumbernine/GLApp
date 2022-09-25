@@ -100,6 +100,10 @@ struct ViewBehavior : public Super_ {
 					leftGuiDown = down;
 				} else if (event.key.keysym.sym == SDLK_RGUI) {
 					rightGuiDown = down;
+				} else if (event.key.keysym.sym == SDLK_LALT) {
+					leftAltDown = down;
+				} else if (event.key.keysym.sym == SDLK_RALT) {
+					rightAltDown = down;
 				}
 			}
 			break;
