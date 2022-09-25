@@ -12,14 +12,13 @@ struct ViewFrustum : public View {
 	using Super = View;
 
 public:	//protected:
-	Tensor::float3 pos;
+	Tensor::float3 pos = {0,0,10};
 	Tensor::Quat<float> angle;
-	
+	Tensor::float3 orbit;
+
+	float fovY = 90;	//in degrees
 	float zFar = 100;
 	float zNear = .01f;
-	
-	//TODO this is really a viewOrbit variable
-	float dist = 1.;
 
 public:
 	using Super::Super;

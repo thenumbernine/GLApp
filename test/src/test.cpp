@@ -17,7 +17,7 @@ struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
 	virtual void init(const Init& args) {
 		Super::init(args);
 		glClearColor(.5, .75, .75, 1.);
-		viewFrustum->dist = 3.;
+		viewFrustum->pos(2) = 3.;
 	}
 	
 	virtual void onUpdate() {
