@@ -31,4 +31,8 @@ void ViewFrustum::mouseZoom(int dx, int dy) {
 	dist *= (float)exp((float)dy * -.03f);
 }
 
+void ViewFrustum::mouseRotate(int dx, int dy) {
+	mousePan(dx, dy);
+}
+
 }

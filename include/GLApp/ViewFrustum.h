@@ -28,6 +28,7 @@ public:
 	virtual void setupModelview();
 	virtual void mousePan(int dx, int dy);
 	virtual void mouseZoom(int dx, int dy);
+	virtual void mouseRotate(int dx, int dy);
 };
 
 }

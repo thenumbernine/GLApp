@@ -1,8 +1,8 @@
+#pragma once
+
 /*
 superclass of ortho and frustum views
 */
-
-#pragma once
 
 namespace GLApp {
 struct GLApp;
@@ -18,8 +18,9 @@ struct View {
 	
 	virtual void setupProjection();
 	virtual void setupModelview();
-	virtual void mousePan(int dx, int dy);
 	virtual void mouseZoom(int dx, int dy);
+	virtual void mousePan(int dx, int dy);
+	virtual void mouseRotate(int dx, int dy);
 };
 
 }

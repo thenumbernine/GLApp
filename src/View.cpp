@@ -18,5 +18,6 @@ void View::setupProjection() {}
 void View::setupModelview() {}
 void View::mousePan(int dx, int dy) {}
 void View::mouseZoom(int dx, int dy) {}
+void View::mouseRotate(int dx, int dy) {}
 
 };

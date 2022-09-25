@@ -1,9 +1,10 @@
+#pragma once
+
 /*
 notice that Common doesn't depend on GL
 I'm just putting this in one place for all projects to reference
 I would've put it in GLApp, but then projects that use GL but not GLApp would still need to reference GLApp
 */
-#pragma once
 
 #if PLATFORM_OSX
 

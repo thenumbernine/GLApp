@@ -1,5 +1,9 @@
+#pragma once
+
 #include "GLApp/ViewOrtho.h"
 #include "GLApp/ViewFrustum.h"
+#include "GLApp/Mouse.h"
+#include "Tensor/Vector.h"
 
 #include "SDL.h"
 #include <memory>
@@ -14,15 +18,14 @@ struct ViewBehavior : public Super_ {
 	std::shared_ptr<::GLApp::ViewOrtho> viewOrtho;
 	std::shared_ptr<::GLApp::View> view;
 	
-	//all these flags are used by the mouse input behavior capture below
-	//TODO - put them in their own location (in libs.v2 they used to be in a 'Mouse' class)
-	//also TODO - make the onSDLEvent toggle-able, or make this a object rather than a behavior
-	bool leftButtonDown = false;
-	bool rightButtonDown = false;
 	bool leftShiftDown = false;
 	bool rightShiftDown = false;
 	bool leftGuiDown = false;
 	bool rightGuiDown = false;
+	bool leftAltDown = false;
+	bool rightAltDown = false;
+	
+	Mouse mouse;
 
 	ViewBehavior() {
 		viewFrustum = std::make_shared<::GLApp::ViewFrustum>(this);
@@ -33,41 +36,58 @@ struct ViewBehavior : public Super_ {
 	virtual ~ViewBehavior() {}
 
 	virtual void onUpdate() {
+		mouse.update();
 		Super::onUpdate();
 		view->setup();
 	}
 
 	virtual void onSDLEvent(SDL_Event& event) {
+		Super::onSDLEvent(event);
+		
 		bool shiftDown = leftShiftDown || rightShiftDown;
 		bool guiDown = leftGuiDown || rightGuiDown;
+		bool altDown = leftAltDown || rightAltDown;
 		
 		switch (event.type) {
 		case SDL_MOUSEMOTION:
-			if (leftButtonDown && !guiDown) {
-				int dx = event.motion.xrel;
-				int dy = event.motion.yrel;
-				if (shiftDown) {
-					if (dx || dy) {
-						view->mouseZoom(dx, dy);
-					}
+		case SDL_MOUSEWHEEL:
+			{
+				Tensor::int2 d;
+				if (event.type == SDL_MOUSEMOTION) {
+					d = {event.motion.xrel, event.motion.yrel};
 				} else {
-					if (dx || dy) {
-						view->mousePan(dx, dy);
+					d = Tensor::int2(event.wheel.x, event.wheel.y) * 10;
+				}
+				if (mouse.leftDown && !guiDown) {
+					if (shiftDown) {
+						if (d != Tensor::int2()) {
+							view->mouseZoom(d(0), d(1));
+						}
+					} else if (altDown) {
+						if (d != Tensor::int2()) {
+							view->mousePan(d(0), d(1));
+						}
+					} else {
+						if (d != Tensor::int2()) {
+							view->mouseRotate(d(0), d(1));
+						}
 					}
 				}
 			}
 			break;
+#if 0 //moved into mouse.update where it polls the buttons
 		case SDL_MOUSEBUTTONUP:
 		case SDL_MOUSEBUTTONDOWN:
 			{
 				bool down = event.type == SDL_MOUSEBUTTONDOWN;
 				if (event.button.button == SDL_BUTTON_LEFT) {
-					leftButtonDown = down;
+					mouse.leftDown = down;
 				} else if (event.button.button == SDL_BUTTON_RIGHT) {
-					rightButtonDown = down;
+					mouse.rightDown = down;
 				}
 			}
 			break;
+#endif		
 		case SDL_KEYUP:
 		case SDL_KEYDOWN:
 			{
@@ -84,7 +104,6 @@ struct ViewBehavior : public Super_ {
 			}
 			break;
 		}
-
 	}
 };
 

@@ -35,4 +35,8 @@ void ViewOrtho::mouseZoom(int dx, int dy) {
 #endif
 }
 
+void ViewOrtho::mouseRotate(int dx, int dy) {
+	mousePan(dx, dy);
+}
+
 }
