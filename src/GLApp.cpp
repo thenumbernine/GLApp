@@ -1,10 +1,7 @@
-#include "GLApp/gl.h"
 #include "GLApp/GLApp.h"
-
+#include "GLCxx/gl.h"
 #include "Common/Exception.h"
-
 #include "SDL.h"	//main
-
 #include <iostream>
 #include <string>
 #include <vector>

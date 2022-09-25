@@ -1,6 +1,6 @@
 distName='GLApp'
 distType='lib'
-depends:append{'../Common', '../Tensor'}
+depends:append{'../GLCxx', '../Common', '../Tensor'}
 
 if platform == 'msvc' 
 or platform == 'clang_win' 

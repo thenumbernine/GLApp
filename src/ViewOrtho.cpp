@@ -1,6 +1,6 @@
 #include "GLApp/ViewOrtho.h"
 #include "GLApp/GLApp.h"
-#include "GLApp/gl.h"
+#include "GLCxx/gl.h"
 
 namespace GLApp {
 

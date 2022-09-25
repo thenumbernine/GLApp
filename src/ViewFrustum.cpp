@@ -1,6 +1,6 @@
 #include "GLApp/ViewFrustum.h"
 #include "GLApp/GLApp.h"
-#include "GLApp/gl.h"
+#include "GLCxx/gl.h"
 #include "Tensor/Vector.h"
 
 namespace GLApp {

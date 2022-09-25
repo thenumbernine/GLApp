@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Tensor/Vector.h"
-#include "GLApp/gl.h"
-#include "SDL.h"
 
 namespace GLApp {
 

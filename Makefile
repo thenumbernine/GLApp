@@ -2,6 +2,7 @@ DIST_FILENAME=GLApp
 DIST_TYPE=lib
 include ../Common/Base.mk
 include ../Tensor/Include.mk
+include ../GLCxx/Include.mk		# only for GLCxx/gl.h for finding the headers for now
 
 # this is in common with Include.mk:
 # the only part that is different is that here we don't want to include libGLApp.so

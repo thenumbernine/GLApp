@@ -1,4 +1,6 @@
 #include "GLApp/Mouse.h"
+#include "GLCxx/gl.h"
+#include "SDL.h"
 
 namespace GLApp {
 

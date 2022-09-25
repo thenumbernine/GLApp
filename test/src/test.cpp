@@ -1,6 +1,6 @@
-#include "GLApp/gl.h"
 #include "GLApp/GLApp.h"
 #include "GLApp/ViewBehavior.h"
+#include "GLCxx/gl.h"
 #include <chrono>
 #include <iostream>
 
