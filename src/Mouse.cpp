@@ -6,15 +6,15 @@ namespace GLApp {
 
 void Mouse::update() {
 	lastPos = pos;
-	int sdlButtons = SDL_GetMouseState(&ipos(0), &ipos(1));
+	int sdlButtons = SDL_GetMouseState(&ipos.x, &ipos.y);
 
 	Tensor::int4 viewport;
-	glGetIntegerv(GL_VIEWPORT, viewport.v);
-	int viewWidth = viewport(2);
-	int viewHeight = viewport(3);
+	glGetIntegerv(GL_VIEWPORT, viewport.s);
+	int viewWidth = viewport[2];
+	int viewHeight = viewport[3];
 
-	pos(0) = (float)ipos(0) / (float)viewWidth;
-	pos(1) = 1.f - (float)ipos(1) / (float)viewHeight;
+	pos.x = (float)ipos.x / (float)viewWidth;
+	pos.y = 1.f - (float)ipos.y / (float)viewHeight;
 
 	deltaPos = pos - lastPos;
 

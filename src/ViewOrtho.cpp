@@ -8,10 +8,10 @@ void ViewOrtho::setupProjection() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(
-		pos(0) - app->getAspectRatio() * .5 / zoom(0), 
-		pos(0) + app->getAspectRatio() * .5 / zoom(0),
-		pos(1) - .5 / zoom(1),
-		pos(1) + .5 / zoom(1), zNear, zFar);
+		pos.x - app->getAspectRatio() * .5 / zoom.x, 
+		pos.x + app->getAspectRatio() * .5 / zoom.x,
+		pos.y - .5 / zoom.y,
+		pos.y + .5 / zoom.y, zNear, zFar);
 }
 
 void ViewOrtho::setupModelview() {
@@ -21,15 +21,15 @@ void ViewOrtho::setupModelview() {
 
 void ViewOrtho::mousePan(int dx, int dy) {
 	pos += Tensor::float2(
-		-(float)dx * app->getAspectRatio() / (float)app->getScreenSize()(0),
-		(float)dy / (float)app->getScreenSize()(1)
+		-(float)dx * app->getAspectRatio() / (float)app->getScreenSize().x,
+		(float)dy / (float)app->getScreenSize().y
 	) / zoom;
 }
 
 void ViewOrtho::mouseZoom(int dx, int dy) {
 #if 0	//zoom separate
-	zoom(0) *= exp(-dx * -.03);
-	zoom(1) *= exp(dy * -.03);
+	zoom.x *= exp(-dx * -.03);
+	zoom.y *= exp(dy * -.03);
 #else	//zoom together
 	zoom *= exp(dy * -.03);
 #endif

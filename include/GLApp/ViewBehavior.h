@@ -61,15 +61,15 @@ struct ViewBehavior : public Super_ {
 				if (mouse.leftDown && !guiDown) {
 					if (shiftDown) {
 						if (d != Tensor::int2()) {
-							view->mouseZoom(d(0), d(1));
+							view->mouseZoom(d.x, d.y);
 						}
 					} else if (altDown) {
 						if (d != Tensor::int2()) {
-							view->mousePan(d(0), d(1));
+							view->mousePan(d.x, d.y);
 						}
 					} else {
 						if (d != Tensor::int2()) {
-							view->mouseRotate(d(0), d(1));
+							view->mouseRotate(d.x, d.y);
 						}
 					}
 				}

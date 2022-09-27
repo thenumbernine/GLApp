@@ -21,9 +21,9 @@ void ViewFrustum::setupProjection() {
 void ViewFrustum::setupModelview() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	Tensor::Quat<float> angleAxis = angle.unitConj().toAngleAxis();
-	glRotatef(angleAxis(3) * 180. / M_PI, angleAxis(0), angleAxis(1), angleAxis(2));
-	glTranslatef(-pos(0), -pos(1), -pos(2));
+	Tensor::quatf aa = angle.unitConj().toAngleAxis();
+	glRotatef(aa.w * 180. / M_PI, aa.x, aa.y, aa.y);
+	glTranslatef(-pos.x, -pos.y, -pos.z);
 }
 
 void ViewFrustum::mousePan(int dx, int dy) {
@@ -33,7 +33,7 @@ void ViewFrustum::mousePan(int dx, int dy) {
 }
 
 void ViewFrustum::mouseZoom(int dx, int dy) {
-	pos = (pos - orbit) * exp(dy * -.03) + orbit;
+	pos = (pos - orbit) * (float)exp(dy * -.03) + orbit;
 }
 
 void ViewFrustum::mouseRotate(int dx, int dy) {
@@ -41,8 +41,8 @@ void ViewFrustum::mouseRotate(int dx, int dy) {
 	magn *= tan(fovY * M_PI / 360.f);
 	float fdx = (float)dx / magn;
 	float fdy = (float)dy / magn;
-	Tensor::Quat<float> rotation = Tensor::Quat<float>(-fdy, -fdx, 0, magn * M_PI / 180.).fromAngleAxis();
-	angle = (angle * rotation).unit();
+	Tensor::quatf rotation = Tensor::quatf(-fdy, -fdx, 0, magn * M_PI / 180.).fromAngleAxis();
+	angle = normalize(angle * rotation);
 	pos = angle.zAxis() * (pos - orbit).length() + orbit;
 }
 

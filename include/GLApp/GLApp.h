@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Tensor/Vector.h"
-
 #include "SDL.h"
 #include <vector>
 #include <string>
@@ -13,7 +12,7 @@ struct GLApp {
 protected:
 	bool done = {};
 	Tensor::int2 screenSize = {640, 480};
-	float aspectRatio = (float)screenSize(0) / (float)screenSize(1);
+	float aspectRatio = (float)screenSize.x / (float)screenSize.y;
 	SDL_Window *window = {};
 	SDL_GLContext context = {};
 	int exitCode = {};

@@ -70,7 +70,7 @@ void GLApp::init(const Init& args) {
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenSize(0), screenSize(1), SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenSize.x, screenSize.y, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
 	if (!window) throw Common::Exception() << "failed to create window";
 
 	context = SDL_GL_CreateContext(window);
@@ -105,9 +105,9 @@ void GLApp::loop() {
 			case SDL_WINDOWEVENT:
 				switch (event.window.event) {
 				case SDL_WINDOWEVENT_RESIZED:
-					screenSize(0) = event.window.data1;
-					screenSize(1) = event.window.data2;
-					aspectRatio = (float)screenSize(0) / (float)screenSize(1);
+					screenSize.x = event.window.data1;
+					screenSize.y = event.window.data2;
+					aspectRatio = (float)screenSize.x / (float)screenSize.y;
 					onResize();
 					break;
 				}
@@ -152,8 +152,8 @@ int GLApp::getSDLInitFlags() {
 }
 
 void GLApp::onResize() {
-	SDL_SetWindowSize(window, screenSize(0), screenSize(1));
-	glViewport(0, 0, screenSize(0), screenSize(1));
+	SDL_SetWindowSize(window, screenSize.x, screenSize.y);
+	glViewport(0, 0, screenSize.x, screenSize.y);
 }
 
 void GLApp::onSDLEvent(SDL_Event& event) {
