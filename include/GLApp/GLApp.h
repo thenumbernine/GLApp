@@ -30,7 +30,7 @@ public:
 	static std::shared_ptr<::GLApp::GLApp> createMainApp();
 
 	//vtable isn't set up yet so don't pass args into GLApp via ctor
-	virtual void init(const Init& args);
+	virtual void init(Init const & args);
 	virtual ~GLApp();
 
 	virtual void loop();
@@ -45,7 +45,7 @@ public:
 	virtual void onUpdate();
 	
 	//used for window construction during init()
-	virtual const char *getTitle();
+	virtual char const * getTitle();
 	virtual int getSDLInitFlags();
 	
 	virtual Tensor::int2 getScreenSize() const;

@@ -10,19 +10,19 @@ void ViewFrustum::setupProjection() {
 	glLoadIdentity();
 	float tanFovY = tan(fovY * M_PI / 360.f);
 	glFrustum(
-		tanFovY * -app->getAspectRatio() * zNear,
-		tanFovY * app->getAspectRatio() * zNear,
-		tanFovY * -zNear,
-		tanFovY * zNear,
-		zNear,
-		zFar);
+		-zNear * tanFovY * app->getAspectRatio(),
+		 zNear * tanFovY * app->getAspectRatio(),
+		-zNear * tanFovY,
+		 zNear * tanFovY,
+		 zNear,
+		 zFar);
 }
 
 void ViewFrustum::setupModelview() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	Tensor::quatf aa = angle.unitConj().toAngleAxis();
-	glRotatef(aa.w * 180. / M_PI, aa.x, aa.y, aa.y);
+	auto aa = angle.conjugate().toAngleAxis();
+	glRotatef(aa.w * 180. / M_PI, aa.x, aa.y, aa.z);
 	glTranslatef(-pos.x, -pos.y, -pos.z);
 }
 

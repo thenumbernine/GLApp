@@ -8,15 +8,18 @@ void ViewOrtho::setupProjection() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(
-		pos.x - app->getAspectRatio() * .5 / zoom.x, 
-		pos.x + app->getAspectRatio() * .5 / zoom.x,
-		pos.y - .5 / zoom.y,
-		pos.y + .5 / zoom.y, zNear, zFar);
+		-.5 / zoom.x * app->getAspectRatio(),
+		 .5 / zoom.x * app->getAspectRatio(),
+		-.5 / zoom.y,
+		 .5 / zoom.y,
+		 zNear,
+		 zFar);
 }
 
 void ViewOrtho::setupModelview() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glTranslatef(-pos.x, -pos.y, 0);
 }
 
 void ViewOrtho::mousePan(int dx, int dy) {

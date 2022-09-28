@@ -18,7 +18,7 @@ public:	//protected:
 
 	float fovY = 90;	//in degrees
 	float zFar = 100;
-	float zNear = .01f;
+	float zNear = .1f;
 
 public:
 	using Super::Super;
