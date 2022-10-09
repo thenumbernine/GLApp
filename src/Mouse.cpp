@@ -9,7 +9,7 @@ void Mouse::update() {
 	int sdlButtons = SDL_GetMouseState(&ipos.x, &ipos.y);
 
 	Tensor::int4 viewport;
-	glGetIntegerv(GL_VIEWPORT, viewport.s);
+	glGetIntegerv(GL_VIEWPORT, viewport.s.data());
 	int viewWidth = viewport[2];
 	int viewHeight = viewport[3];
 
