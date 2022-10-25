@@ -13,7 +13,7 @@ struct ViewFrustum : public View {
 
 public:	//protected:
 	Tensor::float3 pos = {0,0,10};
-	Tensor::quatf angle;
+	Tensor::quatf angle = {1};
 	Tensor::float3 orbit;
 
 	float fovY = 90;	//in degrees
