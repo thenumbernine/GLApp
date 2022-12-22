@@ -14,8 +14,8 @@ public:	//protected:
 	Tensor::float2 pos;
 	Tensor::float2 zoom = {1,1};
 	
-	float zFar = -1;
-	float zNear = 1;
+	float zFar = 1;
+	float zNear = -1;
 
 public:
 	using Super::Super;
