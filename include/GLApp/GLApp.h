@@ -54,6 +54,10 @@ public:
 	//used for access
 	SDL_Window *getWindow() { return window; }
 	SDL_GLContext getGLContext() { return context; }
+
+protected:
+	//override this to change SDL GL attributes
+	virtual void sdlGLSetAttributes();
 };
 
 }
