@@ -1,3 +1,9 @@
 distName='test'
 distType='app'
-depends:append{'../../Common', '../../Tensor', '../../GLCxx', '..'}
+depends:append{
+	'..',
+	'../../SDLApp',	-- would be nice if depends inserted depends ...
+	'../../GLCxx',
+	'../../Tensor',
+	'../../Common',
+}

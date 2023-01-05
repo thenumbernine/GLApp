@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Tensor/Vector.h"
+#include "SDLApp/SDLApp.h"
 #include "SDL.h"
 #include <vector>
 #include <string>
@@ -8,69 +9,33 @@
 
 namespace GLApp {
 
-struct GLApp {
-protected:
-	bool done = {};
-	Tensor::int2 screenSize = {640, 480};
-	float aspectRatio = (float)screenSize.x / (float)screenSize.y;
-	SDL_Window *window = {};
+struct GLApp : public ::SDLApp::SDLApp {
+	using Super = ::SDLApp::SDLApp;
+protected:	
 	SDL_GLContext context = {};
-	int exitCode = {};
 public:
 	bool swap = true;
 
-public:
-	//init args
-	using Init = std::vector<std::string>;
-
-	/*
-	the external program's subclass of GLApp will implement this to return an instance of itself
-	 (using the GLAPP_MAIN macro)
-	*/
-	static std::shared_ptr<::GLApp::GLApp> createMainApp();
-
-	//vtable isn't set up yet so don't pass args into GLApp via ctor
-	virtual void init(Init const & args);
-	virtual ~GLApp();
-
-	virtual void loop();
-
-	virtual void requestExit();	//request exit
-	virtual void requestExit(int code);
-
-	virtual int getExitCode() const;
-
-	virtual void onResize();
-	virtual void onSDLEvent(SDL_Event &event);
-	virtual void onUpdate();
-	
-	//used for window construction during init()
-	virtual char const * getTitle();
-	virtual int getSDLInitFlags();
-	
-	virtual Tensor::int2 getScreenSize() const;
-	virtual float getAspectRatio() const;
-
-	//used for access
-	SDL_Window *getWindow() { return window; }
-	SDL_GLContext getGLContext() { return context; }
-
 protected:
+	//used for window construction during init()
+	virtual void initWindow();
+	virtual std::string getTitle();
+	virtual Uint32 getSDLCreateWindowFlags();
 	//override this to change SDL GL attributes
 	virtual void sdlGLSetAttributes();
+
+public:
+	virtual ~GLApp();
+
+	virtual void onResize();
+	virtual void onUpdate();
+	virtual void postUpdate();
+	
+	//used for access
+	SDL_GLContext getGLContext() { return context; }
 };
 
 }
 
-/*
-Define this somewhere to provide the function which GLApp.cpp expects in its main() for building the App object
-
-When declaring type names, when the namespace matches the class name that this is a static method within, I often have to use :: prefix to deonate the namespace is found in global scope and the class name is found in the namespace.
-However I cannot use the :: prefix on the function name, or else it will give me an error "error: ‘GLApp’ in ‘class std::shared_ptr<GLApp::GLAppASDF>’ does not name a type" (even if I keep the namespace and class names distinct, i.e. struct GLApp -> struct GLAppASDF).
-*/
-#define GLAPP_MAIN(classname)\
-namespace GLApp {\
-	std::shared_ptr<::GLApp::GLApp> GLApp::GLApp::createMainApp() {\
-		return std::dynamic_pointer_cast<::GLApp::GLApp>(std::make_shared<classname>());\
-	}\
-}
+// hmm, old compat? just use SDLAPP_MAIN from here on out?
+#define GLAPP_MAIN(classname) SDLAPP_MAIN(classname)

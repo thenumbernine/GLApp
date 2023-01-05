@@ -1,6 +1,6 @@
 distName='GLApp'
 distType='lib'
-depends:append{'../GLCxx', '../Common', '../Tensor'}
+depends:append{'../SDLApp', '../GLCxx', '../Common', '../Tensor'}
 
 if platform == 'msvc' 
 or platform == 'clang_win' 
@@ -9,39 +9,18 @@ then
 	
 	local GLEWLibDir = assert(os.getenv'GLEW_LIB_DIR', "make sure you defined the environment variable GLEW_LIB_DIR")
 	dynamicLibs:insert(GLEWLibDir..[[\glew32.lib]])
-
-	local SDLDir = os.getenv'SDL2_DIR'
-	local SDLLibDir = os.getenv'SDL2_LIB_DIR'
-	local SDLIncDir = os.getenv'SDL2_INCLUDE_DIR'
-	assert(SDLDir or (SDLLibDir and SDLIncDir), "make sure you define the environment variable SDL2_DIR or both SDL2_INCLUDE_DIR and SDL2_LIB_DIR")
-	SDLLibDir = SDLLibDir or SDLDir .. [[\lib\x64]]
-	SDLIncDir = SDLIncDir or SDLDir..[[\include]]
-	dynamicLibs:insert(SDLLibDir..[[\SDL2.lib]])
-	dynamicLibs:insert(SDLLibDir..[[\SDL2main.lib]])
-	include:insert(SDLIncDir)
-
-	-- SDL2main.lib now needs this:
-	libs:insert'shell32.lib'
 end
 
 -- alright, how many more platforms can I replace with this?
 if platform == 'linux' then 
 	libs:insert'GL'
-	env:addPackages('sdl2', 'glu')
+	env:addPackages'glu'
 end
 
 if platform == 'mingw' then
-	local SDLLibDir = os.getenv'SDL2_DIR'..[[\i686-w64-mingw32\lib]]
-	libpaths:insert(SDLLibDir) 
-	libs:append{'opengl32', 'SDL2main', 'SDL2'}
+	libs:insert'opengl32'
 end
 
 if platform == 'osx' then
 	linkFlags = linkFlags .. ' -framework Cocoa -framework OpenGL' 
-	--dynamic
-	include:insert(home..'/include/SDL2')
-	dynamicLibs:insert(home..'/lib/libSDL2-2.0.0.dylib')
-	--static
-	--libpaths:insert(home..'/lib')
-	--libs:insert'SDL2main'
 end

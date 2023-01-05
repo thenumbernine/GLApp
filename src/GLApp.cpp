@@ -1,81 +1,18 @@
 #include "GLApp/GLApp.h"
 #include "GLCxx/gl.h"
 #include "Common/Exception.h"
-#include "SDL.h"	//main
+#include "SDL.h"	//SDL_GL_*
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
 
-#if !PLATFORM_MSVC && !PLATFORM_CLANG_WIN
-#include <unistd.h>
-#endif
-
-//all just for the chdir ...
-#if PLATFORM_LINUX
-#include <linux/limits.h>	//PATH_MAX
-#endif
-
-//SDL_main...
-int main(int argc, char *argv[]) {
-	std::vector<std::string> args;
-	std::copy(argv, argv+argc, std::back_inserter<std::vector<std::string>>(args));
-
-//fix the fact that osx doesn't know where it is being run from
-#if PLATFORM_OSX
-	if (args.size() == 0) throw Common::Exception() << "expected arg for the exe path";
-	std::string exe = args[0];
-	exe = exe.substr(0, exe.find_last_of('/'));
-	exe = exe.substr(0, exe.find_last_of('/')) + "/Resources";
-	if (chdir(exe.c_str())) {
-		throw Common::Exception() << "chdir failed with error " << errno;
-	}
-#endif
-	
-//you know, no guarantees for Linux either
-//https://stackoverflow.com/questions/4025370/can-an-executable-discover-its-own-path-linux
-#if PLATFORM_LINUX
-	pid_t pid = getpid();
-	std::string path = "/proc/" + std::to_string(pid) + "/exe";
-
-	std::vector<char> dest(PATH_MAX+1, 0);// readlink does not null terminate!
-	if (readlink(path.c_str(), dest.data(), PATH_MAX) == -1) {
-		throw Common::Exception() << "readlink failed to find the current path";
-	}
-	std::string deststr(dest.begin(), dest.end());
-	deststr = deststr.substr(0, deststr.find_last_of('/'));
-	if (chdir(deststr.c_str())) {
-		throw Common::Exception() << "chdir failed with error " << errno;
-	}
-#endif
-	
-	std::shared_ptr<::GLApp::GLApp> app = ::GLApp::GLApp::createMainApp();
-	app->init(args);
-	app->loop();
-	return app->getExitCode();
-}
-
 namespace GLApp {
 
-void GLApp::sdlGLSetAttributes() {
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-}
-
-void GLApp::init(const Init& args) {
-//SDL init
-
-	int sdlInitError = SDL_Init(getSDLInitFlags());
-	if (sdlInitError) throw Common::Exception() << "SDL_Init failed with error code " << sdlInitError;
-
+void GLApp::initWindow() {
+	
 	sdlGLSetAttributes();
-
-	window = SDL_CreateWindow(getTitle(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenSize.x, screenSize.y, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
-	if (!window) throw Common::Exception() << "failed to create window";
+	Super::initWindow();
 
 	context = SDL_GL_CreateContext(window);
 	if (!context) throw Common::Exception() << "failed to create GL context";
@@ -88,96 +25,42 @@ void GLApp::init(const Init& args) {
 #endif
 
 	SDL_GL_SetSwapInterval(0);
-
-	onResize();
 }
 
-GLApp::~GLApp() {
-	if (context) SDL_GL_DeleteContext(context);
-	if (window) SDL_DestroyWindow(window);
-	SDL_Quit();
+void GLApp::sdlGLSetAttributes() {
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 }
 
-void GLApp::loop() {
-	SDL_Event event;
-	while (!done) {
-		while (SDL_PollEvent(&event) > 0) {
-			switch (event.type) {
-			case SDL_QUIT:
-				done = true;
-				break;
-			case SDL_WINDOWEVENT:
-				switch (event.window.event) {
-				case SDL_WINDOWEVENT_RESIZED:
-					screenSize.x = event.window.data1;
-					screenSize.y = event.window.data2;
-					aspectRatio = (float)screenSize.x / (float)screenSize.y;
-					onResize();
-					break;
-				}
-				break;
-			case SDL_KEYDOWN:
-#if PLATFORM_WINDOWS
-					if (event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) != 0) {
-						done = true;
-					}
-#endif
-#if PLATFORM_OSX
-					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_GUI) != 0) {
-						done = true;
-					}
-#endif
-				break;
-			}
-			onSDLEvent(event);
-		}
-
-		onUpdate();
-
-		if (swap) SDL_GL_SwapWindow(window);
-	}
+Uint32 GLApp::getSDLCreateWindowFlags() {
+	return Super::getSDLCreateWindowFlags() | SDL_WINDOW_OPENGL;
 }
 
-void GLApp::requestExit() {
-	done = true;
-}
-
-void GLApp::requestExit(int code) {
-	exitCode = code;
-	requestExit();
-}
-
-const char *GLApp::getTitle() {
+std::string GLApp::getTitle() {
 	return "OpenGL App";
 }
 
-int GLApp::getSDLInitFlags() {
-	return SDL_INIT_VIDEO;
+GLApp::~GLApp() {
+	// hmm TODO pointer wrappers that dtor this function?
+	if (context) SDL_GL_DeleteContext(context);
 }
 
 void GLApp::onResize() {
-	SDL_SetWindowSize(window, screenSize.x, screenSize.y);
+	Super::onResize();	// SDL_SetWindowSize
 	glViewport(0, 0, screenSize.x, screenSize.y);
 }
 
-void GLApp::onSDLEvent(SDL_Event& event) {
-}
-
 void GLApp::onUpdate() {
+	//Super::onUpdate(); is empty
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-//should these be virtual?  should they be inline?
-int GLApp::getExitCode() const {
-	return exitCode;
-}
-	
-Tensor::int2 GLApp::getScreenSize() const {
-	return screenSize;
-}
-
-float GLApp::getAspectRatio() const {
-	return aspectRatio;
+void GLApp::postUpdate() {
+	if (swap) SDL_GL_SwapWindow(window);
 }
 
 }
