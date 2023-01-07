@@ -1,9 +1,6 @@
-#any dependent projects need these:
 GLAPP_PATH:=$(dir $(lastword $(MAKEFILE_LIST)))
-
 INCLUDE+=$(GLAPP_PATH)/include
-
-DYNAMIC_LIBS+=$(GLAPP_PATH)dist/$(PLATFORM)/$(BUILD)/libGLApp$(LIB_SUFFIX)
+DEPEND_LIBS+=$(GLAPP_PATH)dist/$(PLATFORM)/$(BUILD)/$(LIB_PREFIX)GLApp$(LIB_SUFFIX)
 
 # this is in common with Makefile:
 
