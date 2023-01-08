@@ -2,8 +2,5 @@ distName='test'
 distType='app'
 depends:append{
 	'..',
-	'../../SDLApp',	-- would be nice if depends inserted depends ...
 	'../../GLCxx',
-	'../../Tensor',
-	'../../Common',
 }
