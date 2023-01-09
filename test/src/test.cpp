@@ -11,7 +11,7 @@ struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
 	using Clock = std::chrono::high_resolution_clock;
 	std::chrono::time_point<Clock> startTime = std::chrono::high_resolution_clock::now();
 	
-	virtual std::string getTitle() { return "Spinning Triangle"; }
+	virtual std::string getTitle() const { return "Spinning Triangle"; }
 
 	virtual void init(Init const & args) {
 		Super::init(args);

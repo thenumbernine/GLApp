@@ -40,7 +40,7 @@ Uint32 GLApp::getSDLCreateWindowFlags() {
 	return Super::getSDLCreateWindowFlags() | SDL_WINDOW_OPENGL;
 }
 
-std::string GLApp::getTitle() {
+std::string GLApp::getTitle() const {
 	return "OpenGL App";
 }
 

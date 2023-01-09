@@ -16,10 +16,10 @@ protected:
 public:
 	bool swap = true;
 
+	virtual std::string getTitle() const;
 protected:
 	//used for window construction during init()
 	virtual void initWindow();
-	virtual std::string getTitle();
 	virtual Uint32 getSDLCreateWindowFlags();
 	//override this to change SDL GL attributes
 	virtual void sdlGLSetAttributes();
