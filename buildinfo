@@ -18,8 +18,7 @@ end
 
 -- alright, how many more platforms can I replace with this?
 if platform == 'linux' then 
-	libs:insert'GL'
-	env:addPackages'glu'
+	env:addPackages'gl'
 end
 
 if platform == 'mingw' then
