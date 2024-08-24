@@ -30,23 +30,38 @@ struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
 		std::cout << "SDL_GetVersion:" << std::endl;
 		std::cout << (int)version.major << "." << (int)version.minor << "." << (int)version.patch << std::endl;
 
-		//std::string version = "#version 460\n";
-		//osx is dumb.
-		// TODO version=latest like in the lua framework
-		std::string glslVersion = "#version 410\n";
-		std::string shaderCode = Common::File::read("test.shader");
+		std::string glslVersion = GLCxx::Program::getVersionPragma();
+
+		std::cout << "glsl version pragma: " << glslVersion << std::endl;
+
 		shaderProgram = GLCxx::Program(
 			// vertex code
 			std::vector<std::string>{
 				glslVersion,	//first
-				"#define VERTEX_SHADER\n",
-				shaderCode,
+				R"(
+uniform mat4 mvMat, projMat;
+in vec3 pos, color;
+out vec2 posv;
+out vec4 colorv;
+void main() {
+	posv = pos.xy;
+	vec4 vtxWorld = mvMat * vec4(pos, 1.);
+	gl_Position = projMat * vtxWorld;
+	colorv = vec4(color, 1.) + sin(30. * vtxWorld);
+}
+)",
 			},
 			// fragment code
 			std::vector<std::string>{
 				glslVersion,	//first
-				"#define FRAGMENT_SHADER\n",
-				shaderCode,
+				R"(
+in vec2 posv;
+in vec4 colorv;
+out vec4 colorf;
+void main() {
+	colorf = colorv + .1 * sin(gl_FragCoord / 5.);
+}
+)",
 			}
 		);
 
