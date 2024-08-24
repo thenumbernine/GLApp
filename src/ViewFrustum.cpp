@@ -1,14 +1,25 @@
 #include "GLApp/ViewFrustum.h"
 #include "GLApp/GLApp.h"
-#include "GLCxx/gl.h"
 #include "Tensor/Vector.h"
+#ifdef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#include "GLCxx/gl.h"
+#endif
 
 namespace GLApp {
 
 void ViewFrustum::setupProjection() {
+	float tanFovY = tan(fovY * M_PI / 360.f);
+#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+	projMat = Tensor::frustum<float>(
+		-zNear * tanFovY * app->getAspectRatio(),
+		 zNear * tanFovY * app->getAspectRatio(),
+		-zNear * tanFovY,
+		 zNear * tanFovY,
+		 zNear,
+		 zFar);
+#else
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	float tanFovY = tan(fovY * M_PI / 360.f);
 	glFrustum(
 		-zNear * tanFovY * app->getAspectRatio(),
 		 zNear * tanFovY * app->getAspectRatio(),
@@ -16,14 +27,20 @@ void ViewFrustum::setupProjection() {
 		 zNear * tanFovY,
 		 zNear,
 		 zFar);
+#endif
 }
 
 void ViewFrustum::setupModelview() {
+	auto aa = angle.conjugate().toAngleAxis();
+#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+	mvMat = Tensor::rotate<float>(aa.w, aa.axis())
+		* Tensor::translate<float>(-pos);
+#else
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	auto aa = angle.conjugate().toAngleAxis();
 	glRotatef(aa.w * 180. / M_PI, aa.x, aa.y, aa.z);
 	glTranslatef(-pos.x, -pos.y, -pos.z);
+#endif
 }
 
 void ViewFrustum::mousePan(int dx, int dy) {

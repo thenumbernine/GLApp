@@ -13,18 +13,18 @@ namespace GLApp {
 template<typename Super_>
 struct ViewBehavior : public Super_ {
 	using Super = Super_;
-	
+
 	std::shared_ptr<::GLApp::ViewFrustum> viewFrustum;
 	std::shared_ptr<::GLApp::ViewOrtho> viewOrtho;
 	std::shared_ptr<::GLApp::View> view;
-	
+
 	bool leftShiftDown = false;
 	bool rightShiftDown = false;
 	bool leftGuiDown = false;
 	bool rightGuiDown = false;
 	bool leftAltDown = false;
 	bool rightAltDown = false;
-	
+
 	Mouse mouse;
 
 	ViewBehavior() {
@@ -43,11 +43,11 @@ struct ViewBehavior : public Super_ {
 
 	virtual void onSDLEvent(SDL_Event& event) {
 		Super::onSDLEvent(event);
-		
+
 		bool shiftDown = leftShiftDown || rightShiftDown;
 		bool guiDown = leftGuiDown || rightGuiDown;
 		bool altDown = leftAltDown || rightAltDown;
-		
+
 		switch (event.type) {
 		case SDL_MOUSEMOTION:
 		case SDL_MOUSEWHEEL:
@@ -87,7 +87,7 @@ struct ViewBehavior : public Super_ {
 				}
 			}
 			break;
-#endif		
+#endif
 		case SDL_KEYUP:
 		case SDL_KEYDOWN:
 			{

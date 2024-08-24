@@ -3,15 +3,18 @@
 
 namespace GLApp {
 
-View::View(::GLApp::GLApp* app_) 
+View::View(::GLApp::GLApp* app_)
 : app(app_) {
 }
-	
+
 View::~View() {}
 
 void View::setup() {
 	setupProjection();
 	setupModelview();
+#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+	mvProjMat = projMat * mvMat;
+#endif
 }
 
 void View::setupProjection() {}
