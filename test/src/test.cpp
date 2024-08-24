@@ -86,8 +86,6 @@ void main() {
 	virtual void onUpdate() {
 		Super::onUpdate();
 
-		shaderProgram.use();
-
 		// SDL's version, get # milliseconds since SDL was initialized:
 		// float t = SDL_GetTicks64() / 1000;
 		//
@@ -96,12 +94,16 @@ void main() {
 		// Welcome to the future, where everything is retarded.
 		auto t = 1e-3 * std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - startTime).count();
 		view->mvMat = view->mvMat * Tensor::rotate<float>(t * 30., Tensor::float3(0, 1, 0));
-		glUniformMatrix4fv(shaderProgram.getUniformLocation("projMat"), 1, GL_TRUE, &view->projMat.x.x);
-		glUniformMatrix4fv(shaderProgram.getUniformLocation("mvMat"), 1, GL_TRUE, &view->mvMat.x.x);
+
+		shaderProgram
+			.use()
+			.setUniformMatrix<4>("projMat", &view->projMat.x.x, true)
+			.setUniformMatrix<4>("mvMat", &view->mvMat.x.x, true);
 
 		vao.bind();
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 		vao.unbind();
+
 		shaderProgram.done();
 	}
 };
