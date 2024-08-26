@@ -1,13 +1,13 @@
 #include "GLApp/ViewOrtho.h"
 #include "GLApp/GLApp.h"
-#ifdef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#ifdef GLAPP_VIEW_USE_GL_MATRIX_MODE
 #include "GLCxx/gl.h"
 #endif
 
 namespace GLApp {
 
 void ViewOrtho::setupProjection() {
-#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#ifndef GLAPP_VIEW_USE_GL_MATRIX_MODE
 	projMat = Tensor::ortho<float>(
 		-.5 / zoom.x * app->getAspectRatio(),
 		 .5 / zoom.x * app->getAspectRatio(),
@@ -29,7 +29,7 @@ void ViewOrtho::setupProjection() {
 }
 
 void ViewOrtho::setupModelview() {
-#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#ifndef GLAPP_VIEW_USE_GL_MATRIX_MODE
 	mvMat = Tensor::translate<float>(Tensor::float3(-pos.x, -pos.y, 0));
 #else
 	glMatrixMode(GL_MODELVIEW);

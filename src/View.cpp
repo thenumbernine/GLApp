@@ -12,7 +12,7 @@ View::~View() {}
 void View::setup() {
 	setupProjection();
 	setupModelview();
-#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#ifndef GLAPP_VIEW_USE_GL_MATRIX_MODE
 	mvProjMat = projMat * mvMat;
 #endif
 }

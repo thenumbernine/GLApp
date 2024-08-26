@@ -1,7 +1,7 @@
 #include "GLApp/ViewFrustum.h"
 #include "GLApp/GLApp.h"
 #include "Tensor/Vector.h"
-#ifdef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#ifdef GLAPP_VIEW_USE_GL_MATRIX_MODE
 #include "GLCxx/gl.h"
 #endif
 
@@ -9,7 +9,7 @@ namespace GLApp {
 
 void ViewFrustum::setupProjection() {
 	float tanFovY = tan(fovY * M_PI / 360.f);
-#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#ifndef GLAPP_VIEW_USE_GL_MATRIX_MODE
 	projMat = Tensor::frustum<float>(
 		-zNear * tanFovY * app->getAspectRatio(),
 		 zNear * tanFovY * app->getAspectRatio(),
@@ -32,7 +32,7 @@ void ViewFrustum::setupProjection() {
 
 void ViewFrustum::setupModelview() {
 	auto aa = angle.conjugate().toAngleAxis();
-#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#ifndef GLAPP_VIEW_USE_GL_MATRIX_MODE
 	mvMat = Tensor::rotate<float>(aa.w, aa.axis())
 		* Tensor::translate<float>(-pos);
 #else

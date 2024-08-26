@@ -12,7 +12,7 @@ struct View {
 	View(::GLApp::GLApp* app_);
 	virtual ~View();
 
-#ifndef GLAPP_VIEW_USE_DEPRECATED_MATRIXMODE
+#ifndef GLAPP_VIEW_USE_GL_MATRIX_MODE
 	Tensor::float4x4 mvMat, projMat, mvProjMat;
 #endif
 
