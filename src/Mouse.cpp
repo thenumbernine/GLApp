@@ -13,8 +13,8 @@ void Mouse::update() {
 	int viewWidth = viewport[2];
 	int viewHeight = viewport[3];
 
-	pos.x = (float)ipos.x / (float)viewWidth;
-	pos.y = 1.f - (float)ipos.y / (float)viewHeight;
+	pos.x = ipos.x / (float)viewWidth;
+	pos.y = 1.f - ipos.y / (float)viewHeight;
 
 	deltaPos = pos - lastPos;
 

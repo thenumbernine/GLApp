@@ -25,10 +25,12 @@ struct Test : public ::GLApp::ViewBehavior<::GLApp::GLApp> {
 	virtual void init(Init const & args) {
 		Super::init(args);
 
-		SDL_version version;
-		SDL_GetVersion(&version);
+		auto version = SDL_GetVersion();
+		int micro = version % 1000;
+		int minor = (version / 1000) % 1000;
+		int major = version / 1000000;
 		std::cout << "SDL_GetVersion:" << std::endl;
-		std::cout << (int)version.major << "." << (int)version.minor << "." << (int)version.patch << std::endl;
+		std::cout << major << "." << minor << "." << micro << std::endl;
 
 		std::string glslVersion = GLCxx::Program::getVersionPragma();
 

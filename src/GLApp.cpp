@@ -53,7 +53,7 @@ std::string GLApp::getTitle() const {
 
 GLApp::~GLApp() {
 	// hmm TODO pointer wrappers that dtor this function?
-	if (context) SDL_GL_DeleteContext(context);
+	if (context) SDL_GL_DestroyContext(context);
 }
 
 void GLApp::onResize() {

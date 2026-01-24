@@ -49,26 +49,26 @@ struct ViewBehavior : public Super_ {
 		bool altDown = leftAltDown || rightAltDown;
 
 		switch (event.type) {
-		case SDL_MOUSEMOTION:
-		case SDL_MOUSEWHEEL:
+		case SDL_EVENT_MOUSE_MOTION:
+		case SDL_EVENT_MOUSE_WHEEL:
 			{
-				Tensor::int2 d;
-				if (event.type == SDL_MOUSEMOTION) {
+				Tensor::float2 d;
+				if (event.type == SDL_EVENT_MOUSE_MOTION) {
 					d = {event.motion.xrel, event.motion.yrel};
 				} else {
-					d = Tensor::int2(event.wheel.x, event.wheel.y) * 10;
+					d = Tensor::float2(event.wheel.x, event.wheel.y) * 10;
 				}
 				if (mouse.leftDown && !guiDown) {
 					if (shiftDown) {
-						if (d != Tensor::int2()) {
+						if (d != Tensor::float2()) {
 							view->mouseZoom(d.x, d.y);
 						}
 					} else if (altDown) {
-						if (d != Tensor::int2()) {
+						if (d != Tensor::float2()) {
 							view->mousePan(d.x, d.y);
 						}
 					} else {
-						if (d != Tensor::int2()) {
+						if (d != Tensor::float2()) {
 							view->mouseRotate(d.x, d.y);
 						}
 					}
@@ -88,21 +88,21 @@ struct ViewBehavior : public Super_ {
 			}
 			break;
 #endif
-		case SDL_KEYUP:
-		case SDL_KEYDOWN:
+		case SDL_EVENT_KEY_UP:
+		case SDL_EVENT_KEY_DOWN:
 			{
-				bool down = event.type == SDL_KEYDOWN;
-				if (event.key.keysym.sym == SDLK_LSHIFT) {
+				bool down = event.type == SDL_EVENT_KEY_DOWN;
+				if (event.key.key == SDLK_LSHIFT) {
 					leftShiftDown = down;
-				} else if (event.key.keysym.sym == SDLK_RSHIFT) {
+				} else if (event.key.key == SDLK_RSHIFT) {
 					rightShiftDown = down;
-				} else if (event.key.keysym.sym == SDLK_LGUI) {
+				} else if (event.key.key == SDLK_LGUI) {
 					leftGuiDown = down;
-				} else if (event.key.keysym.sym == SDLK_RGUI) {
+				} else if (event.key.key == SDLK_RGUI) {
 					rightGuiDown = down;
-				} else if (event.key.keysym.sym == SDLK_LALT) {
+				} else if (event.key.key == SDLK_LALT) {
 					leftAltDown = down;
-				} else if (event.key.keysym.sym == SDLK_RALT) {
+				} else if (event.key.key == SDLK_RALT) {
 					rightAltDown = down;
 				}
 			}
